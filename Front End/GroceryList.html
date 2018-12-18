@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <title></title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script src="list.js"></script>
+</head>
+
+<body>
+    <p id="title">Grocery List</p>
+    <div class="modal">
+        <div class="AddModal">
+            <label for="GroceryItem">Item</label>
+            <input type="text" name="GroceryItem" id="GroceryItem" required>
+            <label for="ItemQuantity">Quantity</label>
+            <input type="number" name="ItemQuantity" id="ItemQuantity" required>
+            <button id="AddButton">Add</button>
+        </div>
+    </div>
+    <div id="list">
+        <table id="GroceryList">
+            <th></th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </table>
+    </div>
+
+</body>
