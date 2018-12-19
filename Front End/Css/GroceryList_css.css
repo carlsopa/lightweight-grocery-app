@@ -1,20 +1,29 @@
 body {
     background-color: #f5edb2;
-    font-size: 60px;
 }
+
+#header {}
 
 #title {
     background-color: #c6f3bf;
     color: #008080;
-    font-size: 125px;
-    height: 150px;
+    font-size: 3.75rem;
     text-align: center;
-    /* vertical-align: center; */
 }
 
-#AddModal {}
+#content {}
 
-#list {}
+.AddModal {
+    background: red;
+    display: none;
+    height: fit-content;
+}
+
+.Show-Modal {}
+
+#list {
+    font-size: 16px;
+}
 
 #OpenModal {
     position: fixed;

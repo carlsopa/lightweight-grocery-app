@@ -10,4 +10,8 @@ $(document).ready(function() {
     $('#list').on('click', '#RemoveButton', function() {
         $(this).closest('tr').remove();
     });
+    $('#OpenModal').click(function() {
+        // $('.AddModal').toggleClass('Show-Modal');
+        $('.AddModal').slideToggle(500);
+    })
 })

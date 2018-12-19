@@ -8,20 +8,24 @@
 </head>
 
 <body>
-    <p id="title">Grocery List</p>
-    <div class="modal">
-        <div class="AddModal">
-            <input type="text" name="GroceryItem" id="GroceryItem" placeholder="Grocery Item" required>
-            <span id="AddButton"><p>Add</p></span>
-        </div>
+    <div id="header">
+        <p id="title">Grocery List</p>
     </div>
-    <div id="list">
-        <table id="GroceryList">
-            <th></th>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Price</th>
-        </table>
+    <div id="content">
+        <div class="AddModal">
+            <div id="AddModal-content">
+                <input type="text" name="GroceryItem" id="GroceryItem" placeholder="Grocery Item" required>
+                <span id="AddButton"><p>Add</p></span>
+            </div>
+        </div>
+        <div id="list">
+            <table id="GroceryList">
+                <th></th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </table>
+        </div>
     </div>
     <img id='OpenModal' src='Add_Button.png' />
 
