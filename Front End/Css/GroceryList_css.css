@@ -1,0 +1,25 @@
+body {
+    background-color: #f5edb2;
+    font-size: 60px;
+}
+
+#title {
+    background-color: #c6f3bf;
+    color: #008080;
+    font-size: 125px;
+    height: 150px;
+    text-align: center;
+    /* vertical-align: center; */
+}
+
+#AddModal {}
+
+#list {}
+
+#OpenModal {
+    position: fixed;
+    bottom: 25;
+    right: 25;
+    width: 125px;
+    height: 125px;
+}

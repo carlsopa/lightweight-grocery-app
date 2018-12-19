@@ -5,9 +5,9 @@ $(document).ready(function() {
         $("#GroceryList").append(
             '<tr><td><button id="RemoveButton">Remove</button></td><td>' + $("#GroceryItem").val() + '</td><td>' + $("#ItemQuantity").val() + '</td></tr>'
         );
-        console.log($("#RemoveButton"));
-        $("#RemoveButton").click(function() {
-            alert("Remove this row");
-        });
+    });
+    console.log($("#RemoveButton"));
+    $('#list').on('click', '#RemoveButton', function() {
+        $(this).closest('tr').remove();
     });
 })
