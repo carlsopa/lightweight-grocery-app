@@ -3,15 +3,28 @@ $(document).ready(function() {
     var RemoveButton = $("#RemoveButton");
     AddButton.click(function() {
         $("#GroceryList").append(
-            '<tr><td><button id="RemoveButton">Remove</button></td><td>' + $("#GroceryItem").val() + '</td><td>' + $("#ItemQuantity").val() + '</td></tr>'
+            '<tr>\
+            <td class="RemoveItem"><button class="RemoveButton">Remove</button></td>\
+            <td class="GroceryItem">' + $("#GroceryItem").val() + '</td>\
+            <td class="GroceryQty">2</td>\
+            <td class="QtyChange"><div class="QtyUp"></div><div class="QtyDown"></div></td>\
+            </tr>'
         );
     });
     console.log($("#RemoveButton"));
-    $('#list').on('click', '#RemoveButton', function() {
+    $('#list').on('click', '.RemoveButton', function() {
         $(this).closest('tr').remove();
     });
     $('#OpenModal').click(function() {
-        // $('.AddModal').toggleClass('Show-Modal');
         $('.AddModal').slideToggle(500);
+        $('.RemoveItem').toggle();
+        $('.QtyChange').toggle();
+    })
+    $('#list').on('click', '.GroceryItem', function() {
+        $(this).closest('tr').toggleClass('found');
     })
 })
+
+function AddGroceryRow() {
+    return '</td><td class="GroceryQty">2</td><td class="QtyChange"><div class="QtyUp"></div><div class="QtyDown"></div></td></tr>';
+}

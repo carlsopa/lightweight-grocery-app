@@ -1,12 +1,13 @@
 body {
-    background-color: #f5edb2;
+    background-color: #b8d5b8;
+    color: black;
 }
 
 #header {}
 
 #title {
-    background-color: #c6f3bf;
-    color: #008080;
+    background-color: #05a88a;
+    color: #d7b49e;
     font-size: 5em;
     text-align: center;
     margin-bottom: 0px;
@@ -20,7 +21,6 @@ body {
 }
 
 .AddModal {
-    /* background: red; */
     display: none;
     height: fit-content;
 }
@@ -37,7 +37,7 @@ body {
 
 #AddButton {
     float: right;
-    background-color: cyan;
+    background-color: #bc412b;
     width: 150px;
     height: 75px;
     margin-top: 20px;
@@ -47,8 +47,14 @@ body {
     border: black;
 }
 
-#list {
-    font-size: 16px;
+#AddButton p {
+    color: black;
+    font-size: 2.5em;
+    margin: 12px;
+}
+
+#GroceryList {
+    font-size: 5em;
 }
 
 #OpenModal {
@@ -57,4 +63,34 @@ body {
     right: 25;
     width: 125px;
     height: 125px;
+}
+
+.found {
+    text-decoration: line-through;
+}
+
+table {
+    font-size: 5em;
+    width: 100%;
+}
+
+.QtyChange {
+    float: right;
+}
+
+.QtyUp {
+    width: 0px;
+    height: 0px;
+    border-left: 75px solid transparent;
+    border-right: 75px solid transparent;
+    border-bottom: 75px solid black;
+}
+
+.QtyDown {
+    width: 0px;
+    height: 0px;
+    border-top: solid 75px black;
+    border-left: solid 75px transparent;
+    border-right: solid 75px transparent;
+    margin-top: 10px;
 }
