@@ -1,0 +1,48 @@
+<html>
+
+<head>
+    <title></title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script src="Javascript/grocery2_javascript.js"></script>
+    <link rel="stylesheet" type="text/css" href="Css/grocery2_css.css">
+</head>
+
+<body>
+    <div class="header" id="Palatine">
+        <select id="list_select">
+            <option value="">Grocery Lists</option>
+        </select>
+    </div>
+    <div class="content" id="Argonne">
+        <div class="Edit_Modal">
+            <div class="header" id="Modal_Header">
+                <div class="arrow">
+                    <div class="point"></div>
+                    <div class="line"></div>
+                </div>
+                Edit Item
+            </div>
+            <div class="content" id="Modal_content">
+                <form>
+                    <label for="Name">Item Name</label>
+                    <input type="text" name="Name" id="ItemName" />
+                    <label for="category"> Category</label>
+                    <select name="category" id="CategorySelection"></select>
+                    <label for="quantity"> Quantity</label>
+                    <input name="quantity" type="number" id="qty" />
+                    <label for="price"> Price</label>
+                    <input name="price" type="number" id="price" />
+                    <label for="notes"> note</label>
+                    <input name="notes" type="text" id="note" />
+                    <span id="confirm_circle"><div id="confirm"></div></span>
+                </form>
+            </div>
+        </div>
+        <div id="content_list"></div>
+    </div>
+    <div class="footer" id="menu">
+        <span id="cross_circle"><div id="cross"></div></span>
+    </div>
+</body>
+
+</html>

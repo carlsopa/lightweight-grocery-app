@@ -1,0 +1,79 @@
+[{
+        "title": "lista",
+        "items": [{
+                "product": "shrimp",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "chicken",
+                "quantity": 2,
+                "category": "meat"
+            },
+            {
+                "product": "greeb onions",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "apples",
+                "quantity": 4,
+                "category": "meat"
+            },
+            {
+                "product": "spinach",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "milk",
+                "quantity": 1,
+                "category": "meat"
+            }
+        ]
+    },
+    {
+        "title": "listb",
+        "items": [{
+                "product": "red peppers",
+                "quantity": 8,
+                "category": "milk"
+            },
+            {
+                "product": "mushroom",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "pickles",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "honey",
+                "quantity": 1,
+                "category": "meat"
+            },
+            {
+                "product": "chick peas",
+                "quantity": 3,
+                "category": "meat"
+            },
+            {
+                "product": "tomato",
+                "quantity": 6,
+                "category": "meat"
+            },
+            {
+                "product": "raspberries",
+                "quantity": 2,
+                "category": "meat"
+            },
+            {
+                "product": "hamburger",
+                "quantity": 1,
+                "category": "meat"
+            }
+        ]
+    }
+]

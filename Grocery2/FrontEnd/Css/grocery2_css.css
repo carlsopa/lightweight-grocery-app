@@ -1,0 +1,171 @@
+body {
+    display: grid;
+    grid-template-rows: 10% 80% 10%;
+    grid-template-areas: "title" "content" " menu";
+    font-size: 42px;
+}
+
+.header {
+    background-color: red;
+}
+
+.content {
+    background-color: blueviolet;
+}
+
+.footer {
+    background-color: greenyellow;
+}
+
+#Palatine {
+    /* background-color: red; */
+    grid-area: title;
+}
+
+
+/* #header { */
+
+
+/* background-color: red; */
+
+
+/* grid-area: title; */
+
+
+/* } */
+
+#Argonne {
+    /* background-color: blueviolet; */
+    grid-area: content;
+    overflow-y: scroll;
+}
+
+
+/* #content { */
+
+
+/* background-color: blueviolet; */
+
+
+/* grid-area: content; */
+
+
+/* overflow-y: scroll; */
+
+
+}
+#menu {
+    grid-area: menu;
+    /* background-color: greenyellow; */
+}
+.Edit_Modal {
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+.Edit_Modal.open {
+    display: grid;
+    grid-template-rows: 10% 90%;
+}
+#Modal_Header {
+    background-color: red;
+}
+#Modal_content {
+    background-color: blueviolet;
+}
+.item_edit {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+#content_list {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+#remove {
+    grid-column: 1/2;
+}
+#product {
+    grid-column: 2/3;
+}
+#quantity {
+    grid-column: 3/4;
+    text-align: right;
+}
+input {
+    grid-column: 2/3;
+}
+label {
+    text-align: right;
+}
+#confirm_circle {
+    grid-column: 2;
+}
+
+/*create css buttons add button for the menus*/
+
+/*create a check mark for confirmation*/
+#confirm_circle {
+    height: 90px;
+    width: 90px;
+    border: 2px solid white;
+    border-radius: 50%;
+    background-color: burlywood;
+}
+#confirm {
+    height: 64px;
+    width: 32px;
+    border: solid forestgreen;
+    border-width: 0px 7px 7px 0px;
+    transform: rotate(45deg);
+    position: relative;
+    left: 22px;
+}
+
+/*create the add button for the menu*/
+#cross_circle {
+    width: 110px;
+    height: 110px;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    left: 30px;
+    background-color: burlywood;
+}
+#cross:before,
+#cross:after {
+    content: ' ';
+    height: 100px;
+    width: 2px;
+    background-color: #333;
+    position: absolute;
+    left: 54px;
+    top: 5px;
+}
+#cross:before {
+    transform: rotate(90deg);
+}
+
+/*back arrow*/
+.arrow {
+    position: relative;
+    left: 30px;
+    top: 10px;
+}
+.line {
+    margin-top: 7px;
+    width: 90px;
+    height: 5px;
+    background: blue;
+    float: left;
+}
+.point {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 20px solid blue;
+    float: left;
+}
