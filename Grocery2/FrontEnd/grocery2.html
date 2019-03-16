@@ -8,41 +8,19 @@
 </head>
 
 <body>
-    <div class="header" id="Palatine">
+    <header class="bar">
         <select id="list_select">
-            <option value="">Grocery Lists</option>
+          <option value="">Grocery Lists</option>
         </select>
-    </div>
-    <div class="content" id="Argonne">
-        <div class="Edit_Modal">
-            <div class="header" id="Modal_Header">
-                <div class="arrow">
-                    <div class="point"></div>
-                    <div class="line"></div>
-                </div>
-                Edit Item
-            </div>
-            <div class="content" id="Modal_content">
-                <form>
-                    <label for="Name">Item Name</label>
-                    <input type="text" name="Name" id="ItemName" />
-                    <label for="category"> Category</label>
-                    <select name="category" id="CategorySelection"></select>
-                    <label for="quantity"> Quantity</label>
-                    <input name="quantity" type="number" id="qty" />
-                    <label for="price"> Price</label>
-                    <input name="price" type="number" id="price" />
-                    <label for="notes"> note</label>
-                    <input name="notes" type="text" id="note" />
-                    <span id="confirm_circle"><div id="confirm"></div></span>
-                </form>
-            </div>
-        </div>
+    </header>
+    <main>
         <div id="content_list"></div>
-    </div>
-    <div class="footer" id="menu">
-        <span id="cross_circle"><div id="cross"></div></span>
-    </div>
+
+    </main>
+    <nav class="bar_bottom">
+
+    </nav>
+
 </body>
 
 </html>

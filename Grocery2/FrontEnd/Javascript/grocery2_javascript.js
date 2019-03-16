@@ -1,138 +1,126 @@
 $(document).ready(function() {
-    titlelist = []
+    titlelist = [];
+    title = "";
+    titleindex = "";
+    index = "";
 
     titlepull()
     $("#list_select").on("change", function() {
         $("#content_list").html("");
-        listpull($("#list_select").val());
+        title = $("#list_select option:selected").text();
+        titleindex = $(list_select).val();
+        listpull(title);
     })
     $("#content_list").on("click", "#product", function() {
         OpenToggle();
         quantity = $(this).next('div').text();
         product = $(this).closest('div').text();
+        index = $(this).closest('div').attr("index");
         EditObject(product, quantity);
     })
+    $("#content_list").on("click", ".item_card", function() {
+        $('.item_card').removeClass('flip');
+        $(this).addClass('flip');
+        product = $(this).find("#product").text();
+        quantity = $(this).find("#quantity").text();
+        editcard(product, quantity, $(this));
+
+    })
     $(".arrow").on("click", function() {
-        OpenToggle();
-    })
+            OpenToggle();
+        })
+        //when you click the confirm button it will send the information to the backend so that the php file can update the actual json file, and close and return you to the shopping list.  Instead of reloading the list again, it will update the actual list withe information provided.
     $("#confirm_circle").on("click", function() {
-        MinkoffVerification();
-
+        product = $("#ItemName").val();
+        quantity = $("#qty").val();
+        val = 'title=' + titleindex + '&index=' + index + '&product=' + product + '&quantity=' + quantity;
+        dataupdate(val);
+        listupdate(product, quantity);
     })
 
+    //changes the view to show and not show the edit modal based on button clicks 
     function OpenToggle() {
         $(".edit_modal").toggleClass("open");
     }
-
+    //retrives the titles of the lists from the json file.  This only works with titles.
     function titlepull() {
         $.ajax({
             url: '../Data/grocery.json',
             type: 'GET',
             data: 'json'
         }).done((food) => {
-            lst = "listd";
-            food.forEach(function(item) {
-                titlepopulate(item.title);
+            $.each(food, function(index, food) {
+                titlepopulate(index, food.title);
             })
         })
     }
-
+    //this pulls the actual list data from the json file.  It takes as an input the index value of the selected list.
     function listpull(lst) {
         $.ajax({
             url: '../Data/grocery.json',
             type: 'GET',
             data: 'json'
         }).done((food) => {
-            // lst = "listd";
-            food.forEach(function(item) {
-                if (item.title == lst) {
-                    for (x = 0; x < item.items.length; x++) {
-                        product = item.items[x].product;
-                        quantity = item.items[x].quantity;
-                        listpopulate(product, quantity);
+            $.each(food, function(index, food) {
+                if (food.title == lst) {
+                    for (x = 0; x < food.items.length; x++) {
+                        product = food.items[x].product;
+                        quantity = food.items[x].quantity;
+                        listpopulate(x, product, quantity);
                     }
                 }
             })
         })
     }
-
-    function titlepopulate(x) {
+    //this sends any updated information from the modal to a backend php script, that will then update the json file according.  
+    function dataupdate(a) {
+        $.ajax({
+            type: 'post',
+            url: '../BackEnd/php/grocerylist2_php.php',
+            data: a,
+            success: function(data) {
+                console.log(data);
+            }
+        })
+    }
+    //takes the title returned from titlepull and appends a select box with the data
+    function titlepopulate(index, x) {
         $("#list_select").append(
-            '<option value="' + x + '">' + x + '</option>'
+            '<option value="' + index + '">' + x + '</option>'
         );
-
     }
-
-    function listpopulate(product, quantity) {
+    //takes the data from listpull and appends the content area with the new data.
+    function listpopulate(index, product, quantity) {
         $("#content_list").append(
-            '<div id="remove"><span id="remove_button"></span></div>\
-            <div id="product">' + product + '</div>\
-            <div id="quantity">' + quantity + '</div>'
+            '<div class="item_card">\
+            <div class="front">\
+            <div id="remove"><span id="remove_button"></span></div>\
+            <div index=' + index + ' id="product">' + product + '</div>\
+            <div id="quantity">' + quantity + '</div></div>\
+            <div class="back">\
+            </div></div>'
+
         );
 
     }
-
+    //pre-populates the editing modal with data from the actual list
     function EditObject(product, quantity) {
-        console.log(product);
-        console.log(quantity);
         $("#ItemName").val(product);
         $("#qty").val(quantity);
-
+    }
+    //takes the edited data from the editing modal and passes it back to the actual list of items.  
+    function listupdate(product, quantity) {
+        OpenToggle();
+        line = $("#content_list #product[index=" + index + "]")
+        line.html(product);
+        line.next('div').html(quantity);
     }
 
-    function MinkoffVerification() {
-        name = $("#ItemName").val();
-        if (name == "mike") {
-            console.log("this is a good start");
-            OpenToggle();
-            $("#content_list").html("");
-            MikeNote();
-        } else if (name == "ruth") {
-            OpenToggle();
-            $("#content_list").html("");
-            RuthNote();
-        } else if (name == "michelle") {
-            OpenToggle();
-            $("#content_list").html("");
-            MichelleNote();
-        }
-    }
-
-    function MikeNote() {
-        $("#content_list").append(
-            '<div>Hi Mike,<br>\
-            Sorry to hear about your fall, but glad to hear you are doing better.\
-            I wish I could I come out and see you, but I still have to work. \
-            I hope that Michelle is keeping you company, I Know that she is very happy to see you. \
-            Maybe one day soon I can come out with the smiley car, and we can all go out to dinner again. \
-            keep feeling good, and keep positive.<br>\
-            Paul</div>'
-        );
-    }
-
-    function RuthNote() {
-        $("#content_list").append(
-            '<div>Hi Ruth,<br>\
-            I am glad that you have Michelle there to assist you, and I hope that she is making it easier for you.\
-            I want you to know that both you, mike and michelle are in my thoughts and prayers.  I cant imagine what you must be going through. \
-            Just remember that if there is ever anything that you need, or that I can do for you please do not hesistate to let me know. \
-            I offered to Michelle, that if you needed me to come out for a few days to assist with house prep, or re-working, to let me know. \
-            My manager would be willing to work and accomidate me.<br>\
-            keep strong, keep going, this is a testiment to not only your strength but also you love and determination to mike. \
-            Sending my fondest wishes,<br>\
-            Paul</div>'
-        );
-    }
-
-    function MichelleNote() {
-        $("#content_list").append(
-            '<div>Hi Shelli,<br>\
-            You get the shortest note, congrats! That is only because you know all I would say\
-            I think it is truly amazing what you did and are doing for your parents. I talk and tell you\
-             about the goodness in your heart, and this is a testiment and demonstration of all of your good will. \
-             Keep on smiling, keep on helping, and keep on making the best out of the situation.<br>\
-             I hope that this "easter egg" made you and your parents smile.  Love as always<br>\
-             Paulie'
-        );
+    function editcard(product, quantity, thisElement) {
+        $('.back').html('<input type="text" name="Name" class="ItemName" />\
+        <input type="number" name="quantity" class="qty" />\
+        <input type="number" name="price" id="price />');
+        $(thisElement.find('.ItemName')).val(product);
+        $(thisElement.find('.qty')).val(quantity);
     }
 })
