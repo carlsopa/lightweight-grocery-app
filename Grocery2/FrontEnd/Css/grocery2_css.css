@@ -1,34 +1,33 @@
 body {
-    height: 200px;
+    height: 100%;
     display: grid;
-    grid-template-rows: 10vh 80vh 10vh;
+    grid-template-rows: 6vh 79vh 15vh;
     grid-template-areas: "title" "content" "menu";
     font-size: 2em;
     color: #c4a396;
 }
-
 main {
     background-color: #004c45;
     overflow-y: scroll;
 }
-
 select {
     width: 100%;
     font-size: 1em;
 }
-
 .bar {
     background-color: #c44143;
     box-shadow: 0px 6px 7px -1px black;
     z-index: 1;
 }
-
 .bar_bottom {
-    background-color: #c44143;
-    box-shadow: 0px -6px 7px -1px black;
-    z-index: 1;
+    top: -29%;
+    /*background-color: #c44143;*/
+    /*box-shadow: 0px -6px 7px -1px black;*/
+    /*z-index: 1;*/
+    grid-area: menu;
+    position:relative;
+    overflow:hidden;
 }
-
 .item_card {
     background-color: #1f0027;
     border-radius: 25px;
@@ -38,7 +37,6 @@ select {
     box-shadow: 3px 4px 11px 0px black;
     transform-style: preserve-3d;
 }
-
 #content_list {
     display: grid;
     grid-auto-rows: auto;
@@ -47,18 +45,77 @@ select {
     border-radius: 25%;
     justify-content: center;
 }
-
 .flip {
     transition: all 1s ease;
     transform: rotateY(180deg);
 }
-
 .back {
     transition: all 1s ease;
     backface-visibility: hidden;
     transform: rotateY(180deg);
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 25px;
 }
-
 .front {
     backface-visibility: hidden;
+}
+#cross_circle {
+    width: 15vh;
+    height: 15vh;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    left: 37vw;
+    transform: scale(.75);
+    background-color: burlywood;
+    z-index: 3;
+    top: -8%;
+}
+#nav_bg{
+    position:absolute;
+    top:0;
+    left: 0;
+    height:100%;
+    width:100%;
+}
+#cross_circle_cutaway {
+    position: absolute;
+    left: 38vw;
+    width: 14vh;
+    height: 14vh;
+    border-radius: 50%;
+    box-shadow: 5vh 6vh 0 #c44143, -3vh 7vh 0 #c44143, 0 0vh 0 #c44143;
+    z-index: 2;
+}
+    #cross_circle_cutaway:before, #cross_circle_cutaway:after {
+        content: '';
+        width: 800%;
+        height: 130%;
+        position: absolute;
+        background: #c44143;
+        top:30%;
+
+    }
+    #cross_circle_cutaway::before{
+        border-top-left-radius:1vh;
+        left:100%;
+
+    }
+    #cross_circle_cutaway::after{
+        border-top-right-radius:1vh;
+        right:100%;
+    }
+    #cross:before, #cross:after {
+    content: ' ';
+    height: 15vh;
+    width: 2px;
+    background-color: #333;
+    position: absolute;
+    left: 50%;
+    /*top: 5px;*/
+}
+#cross:before {
+    transform: rotate(90deg);
 }

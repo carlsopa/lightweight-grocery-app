@@ -117,7 +117,7 @@ $(document).ready(function() {
     }
 
     function editcard(product, quantity, thisElement) {
-        $('.back').html('<input type="text" name="Name" class="ItemName" />\
+        $('.back').html('<input type="text" name="Name" class="ItemName" /><br>\
         <input type="number" name="quantity" class="qty" />\
         <input type="number" name="price" id="price />');
         $(thisElement.find('.ItemName')).val(product);
