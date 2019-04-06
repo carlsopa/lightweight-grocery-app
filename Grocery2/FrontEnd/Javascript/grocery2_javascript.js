@@ -18,13 +18,22 @@ $(document).ready(function() {
         index = $(this).closest('div').attr("index");
         EditObject(product, quantity);
     })
-    $("#content_list").on("click", ".item_card", function() {
+    $("#content_list").on("click", ".item_card", function () {
         $('.item_card').removeClass('flip');
+        console.log($(this).attr("class"));
         $(this).addClass('flip');
+        console.log($(this).attr("class"));
         product = $(this).find("#product").text();
         quantity = $(this).find("#quantity").text();
         editcard(product, quantity, $(this));
 
+        $('input').on("click", function () {
+            console.log("input selected");
+        })
+
+    })
+    $('input').on("click", function () {
+        console.log("input selected");
     })
     $(".arrow").on("click", function() {
             OpenToggle();

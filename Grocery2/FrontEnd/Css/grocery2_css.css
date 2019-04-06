@@ -6,6 +6,15 @@ body {
     font-size: 2em;
     color: #c4a396;
 }
+input {
+    padding: 8px;
+    margin-top: 8px;
+    border: 1px solid black;
+    font-size: 2em;
+    color: #c4a396;
+    background-color:#7c135f;
+    width:100%;
+}
 main {
     background-color: #004c45;
     overflow-y: scroll;
