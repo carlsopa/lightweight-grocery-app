@@ -1,6 +1,168 @@
-[{ "title": "lista", "items": [{ "product": "shrimp", "quantity": 1, "category": "meat" }, { "product": "chicken", "quantity": "2", "category": "meat" }, { "product": "greeb onions", "quantity": 1, "category": "meat" }, { "product": "apple sauce", "quantity": "1", "category": "meat" }, { "product": "spinach", "quantity": "1", "category": "meat" }, { "product": "milk", "quantity": 1, "category": "meat" }] }, {
-    "title": "listb",
-    "items": [{ "product": "red peppers", "quantity": "8", "category": "milk" }, { "product": "mushroom", "quantity": 1, "category": "meat" }, { "product": "pickles", "quantity": "1", "category": "meat" }, { "product": "honey", "quantity": 1, "category": "meat" }, { "product": "chick peas", "quantity": 3, "category": "meat" }, { "product": "peas", "quantity": 3, "category": "vegetable" }, { "product": "tomato paste", "quantity": "2", "category": "meat" }, { "product": "raspberries", "quantity": 2, "category": "meat" }, { "product": "hamburger", "quantity": 1, "category": "meat" }, { "product": "cup cakes", "quantity": 2, "category": "bakery" },
-        { "product": "soda", "quantity": 1, "category": "drinks" }, { "product": "triscuit", "quantity": 1, "category": "snacks" }
+[
+  {
+    "title": "lista",
+    "items": [
+      {
+        "product": "shrimp",
+        "quantity": 1,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "chicken",
+        "quantity": 2,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "green onions",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "apple sauce",
+        "quantity": 1,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "spinach",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "milk",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Gal"
+      },
+      {
+        "product": "lemon",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "cottage cheese",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Fl Oz"
+      },
+      {
+        "product": "tomato paste",
+        "quantity": 1,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "Salmon",
+        "quantity": 2,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "Frozen Strawberries",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Fl Oz"
+      },
+      {
+        "product": "Frozen Peas",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Oz"
+      },
+      {
+        "product": "Diet Coke",
+        "quantity": 1,
+        "category": "Snacks",
+        "unit": "Each"
+      },
+      {
+        "product": "Wheat Thins",
+        "quantity": 1,
+        "category": "Snacks",
+        "unit": "Each"
+      }
     ]
-}]
+  },
+  {
+    "title": "listb",
+    "items": [
+      {
+        "product": "red peppers",
+        "quantity": "8",
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "mushroom",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "pickles",
+        "quantity": "1",
+        "category": "Produce",
+        "unit": "Lb"
+      },
+      {
+        "product": "honey",
+        "quantity": 1,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "chick peas",
+        "quantity": 3,
+        "category": "Canned Goods",
+        "unit": "Oz"
+      },
+      {
+        "product": "peas",
+        "quantity": 3,
+        "category": "Produce",
+        "unit": "Lb"
+      },
+      {
+        "product": "tomato paste",
+        "quantity": "2",
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "raspberries",
+        "quantity": 2,
+        "category": "Produce",
+        "unit": "Lb"
+      },
+      {
+        "product": "hamburger",
+        "quantity": 1,
+        "category": "meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "cup cakes",
+        "quantity": 2,
+        "category": "bakery",
+        "unit": "Each"
+      },
+      {
+        "product": "soda",
+        "quantity": 1,
+        "category": "Snacks",
+        "unit": "Each"
+      },
+      {
+        "product": "triscuit",
+        "quantity": 1,
+        "category": "snacks",
+        "unit": "Each"
+      }
+    ]
+  }
+]
