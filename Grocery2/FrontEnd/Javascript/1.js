@@ -260,6 +260,13 @@ function ModalClose() {
     document.getElementById('list').style.visibility = 'visible';
     document.body.style.overflow = 'auto';
 }
+function deleteListItem() {
+    itemIndex = this.parentNode.parentNode.getAttribute('index');
+    console.log(shopping[listIndex]);
+    shopping[listIndex].items.splice(itemIndex, 1);
+    listPopulate(listIndex);
+    //console.log(itemIndex);
+}
 
 //the building of the list display
 function listDesign(index,item, category, q,unit) {
@@ -310,6 +317,7 @@ function listDesign(index,item, category, q,unit) {
     deleteButton.id = 'deleteList';
     deleteButton.classList.add('editButton');
     deleteButton.innerHTML = 'delete';
+    deleteButton.addEventListener('click', deleteListItem);
     listEdit.append(editButton, deleteButton);
     controlDiv.appendChild(controlSpan);
     control.appendChild(controlDiv);
