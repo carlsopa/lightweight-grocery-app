@@ -19,22 +19,46 @@ request.send();
 
 request.onload = function () {
     shopping = request.response;
-    for (x = 0; x < shopping.length; x++) {
-        titlePopulate(x,shopping[x]['title']);
-    }
     console.log(shopping);
+    TitlePopulate();
+    
+
     categoryPopulate();
     addFood();
     getList();
     ModalButtons();
     
 };
-function updateList(data) {
+function updateList(type,data) {
     var request = new XMLHttpRequest();
     request.open('POST', '../BackEnd/php/1.php');
-    request.send(data);
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    console.log(listIndex);
+    sendData = [{'type':type, 'id': listIndex, 'data': data }];
+    sendData = JSON.stringify(sendData);
+    request.send(sendData);
+    
+    request.onload = function () {
+        if (request.status === 200) {
+            //console.log(request.responseText);
+        }
+    }
 }
 //take the list titles from the json file and place them in the drop down box
+function TitlePopulate() {
+    var list = document.querySelector('#titleList');
+    //var option = document.createElement('option');
+    for (x = 0; x < shopping.length; x++) {
+        var option = document.createElement('option');
+        option.innerHTML = shopping[x]['title'];
+        option.setAttribute('index', x);
+        list.appendChild(option);
+    }
+    var option = document.createElement('option');
+    option.innerHTML = "create new list";
+    option.setAttribute('index', x);
+    list.appendChild(option);
+}
 function titlePopulate(index, title) {
     var list = document.querySelector('#titleList');
     var option = document.createElement('option');
@@ -119,15 +143,20 @@ function addFood() {
 function getList() {
     var title
     var list = document.querySelector('#titleList');
-    var previous = listIndex;
-    //console.log(listIndex);
+
     list.addEventListener('change', (event) => {
-        title = event.target.selectedIndex;
-        listIndex = title - 1;
-
-        //edit data here
-
-        listPopulate(listIndex);
+        if (event.target.selectedIndex == list.length-1) {
+            title = window.prompt("enter a new list name: ");
+            updateList('new', title);
+            var option = document.createElement('option');
+            option.innerHTML = title;
+            option.setAttribute('index', x);
+            list.appendChild(option);
+        } else {
+            title = event.target.selectedIndex;
+            listIndex = title - 1;
+            listPopulate(listIndex);
+        }
     })
     
 }
@@ -138,8 +167,10 @@ function listPopulate(index) {
         list.removeChild(list.firstChild);
     }
     var listContent = shopping[index].items;
+
     listContent.sort((a, b) => (a.category > b.category) ? 1 : -1);
-    //updateList(listContent);
+
+    updateList('update',listContent);
     for (x = 0; x < listContent.length;x++) {
         listDesign(x,listContent[x]['product'], listContent[x]['category'], listContent[x]['quantity'],listContent[x]['unit']);
     }
@@ -247,6 +278,8 @@ function ModalButtons() {
                 shopping[listIndex].items[itemIndex].quantity = modalQty;
                 shopping[listIndex].items[itemIndex].category = modalCategory;
                 shopping[listIndex].items[itemIndex].unit = modalQtyLst;
+                console.log(shopping[listIndex].items);
+                updateList('update', shopping[listIndex].items);
                 if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
                     listPopulate(listIndex);
                 }
