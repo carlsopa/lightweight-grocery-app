@@ -24,6 +24,9 @@ if($type=='update'){
 echo"this is good";
 	$jsonData[] = array("title"=>$info,"items"=>[]);
 }
+elseif($type=='delete'){
+	array_splice($jsonData,$info,1);
+}
  $newJsonString = json_encode($jsonData);
  file_put_contents($file, $newJsonString);
 

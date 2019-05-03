@@ -1,14 +1,26 @@
 ﻿body {
     display: grid;
-    grid-template-rows: 15vh 85vh;
-    grid-template-areas: "title" "content";
+    grid-template-rows: 10vh 90vh;
+    overflow:hidden;
+    font-family:'ubuntu';
+    font-size:3em;
 
 }
 main{
+    max-width:700px;
+    height:100%;
+    display:grid;
+    grid-template-rows: 95% 5%;
     justify-self: center;
 }
+nav{
+    max-width:900px;
+    justify-self: center;
+}
+#ItemControl{
+    overflow:auto;
+}
 #list{
-    max-width:700px;
     display: grid;
     grid-auto-rows: auto;
     border-bottom: 2px solid black;
@@ -63,7 +75,7 @@ main{
     visibility:hidden;
     background-color:darkslategrey;
 }
-.modalContent{
+#modalContent{
     display:grid;
     grid-template-columns:auto auto;
 
@@ -77,4 +89,24 @@ main{
 }
 .visible{
     visibility:visible;
+}
+#titles{
+    display: grid;
+    grid-template-columns: auto;
+    justify-self:center;
+    position:absolute;
+    top:50%;
+    width:350px;
+    background-color: white;
+}
+.titleItem {
+    display: grid;
+    grid-template-columns: 50px 300px;
+    padding-bottom: 10px;
+}
+#bottomNav{
+    justify-self:center;
+}
+.categoryHeader {
+    font-weight: bold;
 }

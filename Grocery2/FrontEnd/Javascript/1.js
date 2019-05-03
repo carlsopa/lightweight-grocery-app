@@ -27,8 +27,14 @@ request.onload = function () {
     addFood();
     getList();
     ModalButtons();
+    NavButtons();
     
 };
+function NavButtons() {
+    document.getElementById('addList').addEventListener('click', newList);
+    document.getElementById('deleteList').addEventListener('click', deleteList);
+    document.getElementById('shareList');
+}
 function updateList(type,data) {
     var request = new XMLHttpRequest();
     request.open('POST', '../BackEnd/php/1.php');
@@ -53,6 +59,7 @@ function TitlePopulate() {
         option.innerHTML = shopping[x]['title'];
         option.setAttribute('index', x);
         list.appendChild(option);
+        TitleDesign(x, shopping[x]['title']);
     }
     var option = document.createElement('option');
     option.innerHTML = "create new list";
@@ -140,25 +147,44 @@ function addFood() {
     })
 }
 //get the correct list from our data set, based on the list choosen from the drop down box
+function newList() {
+    title = window.prompt("enter a new list name: ");
+    if (title != null) {
+        updateList('new', title);
+        var option = document.createElement('option');
+        option.innerHTML = title;
+        option.setAttribute('index', x);
+        list.appendChild(option);
+    }
+}
 function getList() {
     var title
     var list = document.querySelector('#titleList');
 
     list.addEventListener('change', (event) => {
-        if (event.target.selectedIndex == list.length-1) {
-            title = window.prompt("enter a new list name: ");
-            updateList('new', title);
-            var option = document.createElement('option');
-            option.innerHTML = title;
-            option.setAttribute('index', x);
-            list.appendChild(option);
-        } else {
+
             title = event.target.selectedIndex;
             listIndex = title - 1;
             listPopulate(listIndex);
-        }
+        
     })
     
+}
+function deleteList() {
+    var modal = document.getElementById('modal');
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('list').style.visibility = 'hidden';
+    document.getElementById('modalContent').style.visibility='hidden';
+}
+function deleteTitle() {
+    if (this.checked) {
+        if (window.confirm("Would you like to delete this list?")) {
+            var index = this.parentNode.parentNode.getAttribute('index');
+            updateList('delete', index);
+        }
+    }
+
 }
 //being supplied a list it gets the individual objects from the list, and itterates over them building up the list display
 function listPopulate(index) {
@@ -253,7 +279,8 @@ function itemEdit() {
     var modal = document.getElementById('modal');
     modal.classList.add('visible');
     document.body.style.overflow = 'hidden';
-    document.getElementById('list').style.visibility='hidden';
+    document.getElementById('list').style.visibility = 'hidden';
+    document.getElementById('titles').style.visibility = 'hidden';
 
    
 
@@ -301,6 +328,25 @@ function deleteListItem() {
     //console.log(itemIndex);
 }
 
+function TitleDesign(index, title) {
+    console.log(index + ': ' + title);
+    var list = document.getElementById('titles');
+    var titleItem = document.createElement('div');
+    titleItem.setAttribute('class', 'titleItem');
+    titleItem.setAttribute('index', index);
+    var control = document.createElement('div');
+    control.setAttribute('id', 'control');
+    var controlSpan = document.createElement('input');
+    controlSpan.setAttribute('type', 'checkbox');
+    controlSpan.addEventListener('change', deleteTitle);
+    var titleObject = document.createElement('div');
+    var titleBox = document.createElement('div');
+    titleBox.innerHTML = title;
+    control.append(controlSpan);
+    titleObject.append(titleBox);
+    titleItem.append(control, titleObject);
+    list.append(titleItem);
+}
 //the building of the list display
 function listDesign(index,item, category, q,unit) {
     var categoryCreate = false;

@@ -2,6 +2,7 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="Css/1.css">
     <script src="Javascript/1.js"></script>
 
@@ -21,20 +22,28 @@
         <button id="toggleEdit" type="button">Show edit</button>
     </nav>
     <main>
-        <div id="modal" class="modalBox">
-            <div class="modalContent">
+        <div id="ItemControl">
+            <div id="modal" class="modalBox">
                 <div id="titles"></div>
-                <form>
-                    <label for="modalFoodInput">List item: </label><input id="modalFoodInput" type="text" /><br />
-                    <label for="modalCategoryList">Item category: </label><select id="modalCategoryList"></select><br />
-                    <label for="modalQtyInput">Quantity: </label><input id="modalQtyInput" type="number" value="1" min="1" /><br />
-                    <label for="modalQtyList">Measurement</label><select id="modalQtyList"></select>
-                    <button id="updateModal" type="button">Update</button><button id="cancelModal" type="button">Cancel</button>
-                </form>
+                <div id="modalContent">
+                    <form>
+                        <label for="modalFoodInput">List item: </label><input id="modalFoodInput" type="text" /><br />
+                        <label for="modalCategoryList">Item category: </label><select id="modalCategoryList"></select><br />
+                        <label for="modalQtyInput">Quantity: </label><input id="modalQtyInput" type="number" value="1" min="1" /><br />
+                        <label for="modalQtyList">Measurement</label><select id="modalQtyList"></select>
+                        <button id="updateModal" type="button">Update</button><button id="cancelModal" type="button">Cancel</button>
+                    </form>
+                </div>
             </div>
+            <div id="list"></div>
+            <div id="cart"></div>
         </div>
-        <div id="list"></div>
-        <div id="cart"></div>
+
+        <div id="bottomNav">
+            <a id="addList" href="#">Add a List</a>
+            <a id="deleteList" href="#">Delete a List</a>
+            <a id="deleteList" href="#">Share a list</a>
+        </div>
     </main>
 
 </body>
