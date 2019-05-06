@@ -132,4 +132,13 @@ $(document).ready(function() {
         $(thisElement.find('.ItemName')).val(product);
         $(thisElement.find('.qty')).val(quantity);
     }
+
+    function addCard() {
+        $("#content_list").append(
+            'div class="item_card">\
+            <div class="front">\
+            <div id="remove"><span id="remove_button"></span></div>\
+            </div>\
+            </div><div class="back"></div></div>');
+    }
 })

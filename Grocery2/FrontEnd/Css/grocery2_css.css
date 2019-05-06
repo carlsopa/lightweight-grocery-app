@@ -1,8 +1,8 @@
 body {
     height: 100%;
     display: grid;
-    grid-template-rows: 6vh 79vh 15vh;
-    grid-template-areas: "title" "content" "menu";
+    grid-template-rows: 15vh 85vh;
+    grid-template-areas: "title" "content";
     font-size: 2em;
     color: #c4a396;
 }

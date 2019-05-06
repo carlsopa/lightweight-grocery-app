@@ -9,8 +9,16 @@ var cartList = []
 var copyNode;
 var trigger = false;
 var itemIndex;
-//var foodInput = document.querySelector("#foodInput");
 var list = document.querySelector('#titleList');
+var newItemCategoryList;
+var editItemCategoryList;
+var newItemUnitList;
+var editItemUnitList;
+var newItemName;
+var newItemQuantity;
+var newItemUnit;
+var foodButton;
+var cart;
 var requestUrl = '../Data/grocery.json';
 var request = new XMLHttpRequest();
 request.open('GET', requestUrl);
@@ -21,7 +29,15 @@ request.onload = function () {
     shopping = request.response;
     console.log(shopping);
     TitlePopulate();
-    
+    newItemCategoryList = document.querySelector("#newItemCategory");
+    editItemCategoryList = document.getElementById('editItemCategory');
+    newItemUnitList = document.querySelector("#newItemUnit");
+    editItemUnitList = document.getElementById('editItemUnit')
+    newItemName = document.querySelector("#newItemName");
+    newItemQuantity = document.querySelector("#newItemQuantity");
+    newItemUnit = document.querySelector("#newItemUnit");
+    foodButton = document.querySelector('#foodButton');
+    cart = document.querySelector("#cart");
 
     categoryPopulate();
     addFood();
@@ -30,6 +46,19 @@ request.onload = function () {
     NavButtons();
     
 };
+function Handler(e) {
+    console.log(e.target.parentNode.parentNode);
+    if (e.target.type == 'checkbox') {
+        cartToListControl(e.target.parentNode.parentNode)
+    } else if (e.target.id == 'editList') {
+        console.log(e.target.parentNode.parentNode.getAttribute('index'));
+        itemEdit(e);
+    } else if (e.target.id == 'deleteList') {
+        console.log(e.target.parentNode.parentNode.getAttribute('index'));
+        deleteListItem(e);
+    }
+}
+
 function NavButtons() {
     document.getElementById('addList').addEventListener('click', newList);
     document.getElementById('deleteList').addEventListener('click', deleteList);
@@ -40,20 +69,20 @@ function updateList(type,data) {
     request.open('POST', '../BackEnd/php/1.php');
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     console.log(listIndex);
-    sendData = [{'type':type, 'id': listIndex, 'data': data }];
+        sendData = [{ 'type': type, 'id': listIndex, 'data': data }];
     sendData = JSON.stringify(sendData);
     request.send(sendData);
     
     request.onload = function () {
         if (request.status === 200) {
-            //console.log(request.responseText);
+            console.log(request.responseText);
         }
     }
 }
 //take the list titles from the json file and place them in the drop down box
 function TitlePopulate() {
     var list = document.querySelector('#titleList');
-    //var option = document.createElement('option');
+    //list.options.length = 0;
     for (x = 0; x < shopping.length; x++) {
         var option = document.createElement('option');
         option.innerHTML = shopping[x]['title'];
@@ -61,89 +90,61 @@ function TitlePopulate() {
         list.appendChild(option);
         TitleDesign(x, shopping[x]['title']);
     }
-    var option = document.createElement('option');
-    option.innerHTML = "create new list";
-    option.setAttribute('index', x);
-    list.appendChild(option);
+    
 }
-function titlePopulate(index, title) {
-    var list = document.querySelector('#titleList');
-    var option = document.createElement('option');
-    option.innerHTML = title;
-    option.setAttribute('index', x);
-    list.appendChild(option);
-}
+
+
 //create the dropdown box for the user input
 function categoryPopulate() {
-    var list = document.querySelector("#categoryList");
-    var modalList = document.getElementById('modalCategoryList');
-    var measureList = document.querySelector("#qtyList");
-    var modalMeasureList = document.getElementById('modalQtyList')
     for (items in dataCategory) {
         var option = document.createElement('option');
         option.innerHTML = items;
         option.innerHTML = dataCategory[items];
         option.setAttribute('index', items);
-        list.append(option);
+        newItemCategoryList.append(option);
     }
     for (items in measureCategory) {
         var option = document.createElement('option');
         option.innerHTML = measureCategory[items];
         option.setAttribute('index', items);
-        measureList.appendChild(option);
+        newItemUnitList.appendChild(option);
     }
     for (items in dataCategory) {
         var option = document.createElement('option');
         option.innerHTML = items;
         option.innerHTML = dataCategory[items];
         option.setAttribute('index', items);
-        modalList.append(option);
+        editItemCategoryList.append(option);
     }
     for (items in measureCategory) {
         var option = document.createElement('option');
         option.innerHTML = measureCategory[items];
         option.setAttribute('index', items);
-        modalMeasureList.appendChild(option);
+        editItemUnitList.appendChild(option);
     }
 }
 //add food from the input to the grocery list
 function addFood() {
-    var foodInput = document.querySelector("#foodInput");
-    var categoryList = document.querySelector("#categoryList");
-    var qtyInput = document.querySelector("#qtyInput");
-    var qtyList = document.querySelector("#qtyList");
-    var foodButton = document.querySelector('#foodButton');
-    //var lst
     foodButton.addEventListener('click', (event) => {
-            var foodCategory = dataCategory[categoryList.selectedIndex];
+            var foodCategory = dataCategory[newItemCategory.selectedIndex];
             var foundBoolean = false;
             if (listIndex == undefined) { alert("please choose a list to add food"); }
             lst = shopping[listIndex].items;
             for (x = 0; x < lst.length; x++) {
-                if (lst[x].product == foodInput.value) {
-                    lst[x].quantity++;
+                if (lst[x].product == newItemName.value) {
+                    lst[x].quantity = parseInt(lst[x].quantity)+parseInt(newItemQuantity.value);
                     foundBoolean = true;
+                    console.log(lst[x]);
+                    updateList('update', lst);
                     break;
                 }
             }
-            if (!foundBoolean) {
-                lst.push({ product: foodInput.value, quantity: qtyInput.value, category: foodCategory, unit: qtyList.value })
+        if (!foundBoolean) {
+            console.log(lst);
+                lst.push({ product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value })
+            updateList('newObject', { product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value });
             }
             listPopulate(listIndex);
-    })
-    var editButton = document.querySelector('#toggleEdit');
-    editButton.addEventListener('click', (event) => {
-        var hiddenList = document.getElementsByClassName('hiddenColumn');
-        for (x = 0; x < hiddenList.length; x++) {
-            var column = hiddenList[x];
-            console.log(column);
-            if (column.style.display == 'none') {
-                column.style.display = 'block'
-            } else {
-                column.style.display = 'none'
-        }
-    }
-        
     })
 }
 //get the correct list from our data set, based on the list choosen from the drop down box
@@ -154,7 +155,7 @@ function newList() {
         var option = document.createElement('option');
         option.innerHTML = title;
         option.setAttribute('index', x);
-        list.appendChild(option);
+        document.getElementById('titleList').appendChild(option);
     }
 }
 function getList() {
@@ -181,7 +182,11 @@ function deleteTitle() {
     if (this.checked) {
         if (window.confirm("Would you like to delete this list?")) {
             var index = this.parentNode.parentNode.getAttribute('index');
+
+            //shopping[title].items.splice(itemIndex, 1);
             updateList('delete', index);
+            ModalClose();
+            TitlePopulate();
         }
     }
 
@@ -193,21 +198,20 @@ function listPopulate(index) {
         list.removeChild(list.firstChild);
     }
     var listContent = shopping[index].items;
-
-    listContent.sort((a, b) => (a.category > b.category) ? 1 : -1);
-
-    updateList('update',listContent);
+    console.log(listContent);
+    if (listContent.length > 1) {
+        listContent.sort((a, b) => (a.category > b.category) ? 1 : -1);
+    }
     for (x = 0; x < listContent.length;x++) {
         listDesign(x,listContent[x]['product'], listContent[x]['category'], listContent[x]['quantity'],listContent[x]['unit']);
     }
 }
 function listControl() {
     if (this.checked) {
-        var parentList = this.parentNode.parentNode.parentNode.parentNode;   
-        var activeNode = this.parentNode.parentNode.parentNode;
+        var parentList = this.parentNode.parentNode.parentNode;   
+        var activeNode = this.parentNode.parentNode;
         copyNode = activeNode.cloneNode(true);
         copyNode.addEventListener('change', cartControl);
-        var cart = document.querySelector("#cart");
         if (cart.children.length > 0) {
             for (x = 0; x < cart.children.length; x++) {
                 if (parseInt(activeNode.getAttribute("index")) < parseInt(cart.children[x].getAttribute("index"))) {
@@ -223,13 +227,18 @@ function listControl() {
     }
     parentList.removeChild(activeNode);
 }
-function cartToListControl() {
+function cartToListControl(e) {
     if (!this.checked) {
         console.log(this);
-        activeNode = this;
-        copyNode = this.cloneNode(true);
+        console.log(e);
+        if (e != null) {
+            activeNode = e;
+            copyNode = e.cloneNode(true);
+        } else {
+            activeNode = this;
+            copyNode = this.cloneNode(true);
+        }
         copyNode.addEventListener('change', cartControl);
-        var cart = document.querySelector("#cart");
         console.log(cart);
         if (cart.children.length > 0) {
             for (x = 0; x < cart.children.length; x++) {
@@ -252,7 +261,8 @@ function cartControl() {
         activeNode = this;
         copyNode = this.cloneNode(true);
         copyNode.classList.remove("found");
-        copyNode.addEventListener('change', cartToListControl);
+        copyNode.addEventListener('change', Handler);
+        copyNode.addEventListener('click', Handler);
         var list = document.querySelector("#list");
         if (list.children.length > 0) {
             for (x = 0; x < list.children.length; x++) {
@@ -267,65 +277,77 @@ function cartControl() {
     } 
     document.querySelector("#cart").removeChild(activeNode);
 }
-function itemEdit() {
-    itemIndex = this.parentNode.parentNode.getAttribute('index');
+
+function itemEdit(e) {
+    console.log(e);
+    console.log(this);
+    if (e != null) {
+        itemIndex = e.target.parentNode.parentNode.getAttribute('index');
+    } else {
+        itemIndex = this.parentNode.parentNode.getAttribute('index');
+    }
     console.log(itemIndex);
     var listIndex = document.querySelector('#titleList').selectedIndex-1;
     var list = shopping[listIndex].items[itemIndex];
-    document.querySelector("#modalFoodInput").value = list['product'];
-    document.querySelector("#modalCategoryList").value=list['category'];
-    document.querySelector("#modalQtyInput").value=list['quantity'];
-    document.querySelector("#modalQtyList").value = list['unit'];
+    document.getElementById("editItemName").value = list['product'];
+    document.getElementById("editItemCategory").value=list['category'];
+    document.getElementById("editItemQuantity").value=list['quantity'];
+    document.getElementById("editItemUnit").value = list['unit'];
     var modal = document.getElementById('modal');
     modal.classList.add('visible');
     document.body.style.overflow = 'hidden';
     document.getElementById('list').style.visibility = 'hidden';
     document.getElementById('titles').style.visibility = 'hidden';
-
-   
-
 }
 function ModalButtons() {
-    var modalClose = document.getElementById('cancelModal');
-    var modalUpdate = document.getElementById('updateModal')
+    var modalClose = document.getElementById('cancelEdit');
+    var modalUpdate = document.getElementById('updateEdit');
     modalClose.addEventListener('click', ModalClose);
-    modalUpdate.addEventListener('click', () => {
+    modalUpdate.addEventListener('click', updateEditModal);
+    
+}
+function updateEditModal() {
+    modalFood = document.getElementById("editItemName").value;
+    modalCategory = document.getElementById("editItemCategory").value;
+    modalQty = parseInt(document.getElementById("editItemQuantity").value);
+    modalQtyLst = document.getElementById("editItemUnit").value;
 
-        modalFood = document.getElementById("modalFoodInput").value;
-        modalCategory = document.getElementById("modalCategoryList").value;
-        modalQty = document.getElementById("modalQtyInput").value;
-        modalQtyLst = document.getElementById("modalQtyList").value;
+    for (x = 0; x < document.getElementById('list').children.length; x++) {
+        if (document.getElementById('list').children[x].getAttribute('index') == itemIndex) {
+            document.getElementById('list').children[x].children[1].children[0].innerHTML = modalFood;
+            document.getElementById('list').children[x].children[2].children[1].innerHTML = modalQty;
+            document.getElementById('list').children[x].children[2].children[0].innerHTML = modalQtyLst;
+            shopping[listIndex].items[itemIndex].product = modalFood;
+            shopping[listIndex].items[itemIndex].quantity = modalQty;
+            shopping[listIndex].items[itemIndex].category = modalCategory;
+            shopping[listIndex].items[itemIndex].unit = modalQtyLst;
 
-        for (x = 0; x < document.getElementById('list').children.length; x++) {
-            if (document.getElementById('list').children[x].getAttribute('index') == itemIndex) {
-                document.getElementById('list').children[x].children[1].children[0].innerHTML = modalFood;
-                document.getElementById('list').children[x].children[2].children[1].innerHTML = modalQty;
-                document.getElementById('list').children[x].children[2].children[0].innerHTML = modalQtyLst;
-                shopping[listIndex].items[itemIndex].product = modalFood;
-                shopping[listIndex].items[itemIndex].quantity = modalQty;
-                shopping[listIndex].items[itemIndex].category = modalCategory;
-                shopping[listIndex].items[itemIndex].unit = modalQtyLst;
-                console.log(shopping[listIndex].items);
-                updateList('update', shopping[listIndex].items);
-                if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
-                    listPopulate(listIndex);
-                }
+            updateList('update', shopping[listIndex].items);
+            if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
+                listPopulate(listIndex);
             }
         }
-        ModalClose();
-    })
+    }
+    ModalClose();
 }
 function ModalClose() {
     document.getElementById('modal').classList.remove('visible');
     document.getElementById('list').style.visibility = 'visible';
     document.body.style.overflow = 'auto';
 }
-function deleteListItem() {
-    itemIndex = this.parentNode.parentNode.getAttribute('index');
+function deleteListItem(e) {
+    console.log(e);
+    console.log(this);
+    if (e != null) {
+        itemIndex = e.target.parentNode.parentNode.getAttribute('index');
+    } else {
+        itemIndex = this.parentNode.parentNode.getAttribute('index');
+    }
+    //itemIndex = this.parentNode.parentNode.getAttribute('index');
     console.log(shopping[listIndex]);
     shopping[listIndex].items.splice(itemIndex, 1);
     listPopulate(listIndex);
-    //console.log(itemIndex);
+    updateList('deleteItem', itemIndex);
 }
 
 function TitleDesign(index, title) {
@@ -348,7 +370,7 @@ function TitleDesign(index, title) {
     list.append(titleItem);
 }
 //the building of the list display
-function listDesign(index,item, category, q,unit) {
+function listDesign(index,item, category, quantity,unit) {
     var categoryCreate = false;
     //top level selector
     var list = document.querySelector('#list');
@@ -357,34 +379,30 @@ function listDesign(index,item, category, q,unit) {
     listItems.setAttribute('class', 'items');
     listItems.setAttribute('index', index);
     //the top level control element
+
     var control = document.createElement('div');
     control.setAttribute('id', 'control');
-    //the div for the delete box
-    var controlDiv = document.createElement('div');
     //delete box
     var controlSpan = document.createElement('input');
     controlSpan.setAttribute('type', 'checkbox');
     controlSpan.addEventListener('change', listControl);
     //top level for product box
-    var object = document.createElement('div');
-    object.setAttribute('class', 'object');
-    var listObject = document.createElement('div');
-    listObject.setAttribute('class', 'product');
-    listObject.innerHTML = item;
+
+    var listItem = document.createElement('div');
+    listItem.setAttribute('class', 'object');
+    var itemName = document.createElement('span');
+    itemName.setAttribute('class', 'product');
+    itemName.innerHTML = item;
     //element for the category
-    var listProduce = document.createElement('div');
-     listProduce.innerHTML = category;
-    listProduce.setAttribute('class', 'left category');
-    var quantity = document.createElement('div');
-    quantity.setAttribute('class', 'quantity');
-    var listQuantity = document.createElement('div');
-    listQuantity.setAttribute('class', 'quantityValue');
-     listQuantity.innerHTML = q;
-    var listQuantityType = document.createElement('div');
-    listQuantityType.setAttribute('class', 'left quantityType');
-    listQuantityType.innerHTML = unit;
-    var listEdit = document.createElement('div');
-    listEdit.classList.add('hiddenColumn');
+    var itemQuantity = document.createElement('span');
+    itemQuantity.setAttribute('class', 'quantityValue');
+     itemQuantity.innerHTML = quantity;
+    var itemUnit = document.createElement('span');
+    itemUnit.setAttribute('class', 'left quantityType');
+    itemUnit.innerHTML = unit;
+
+    var itemControl = document.createElement('div');
+    itemControl.classList.add('hiddenColumn');
     var editButton = document.createElement('button');
     editButton.setAttribute('type', 'button');
     editButton.id = 'editList';
@@ -394,39 +412,38 @@ function listDesign(index,item, category, q,unit) {
     var deleteButton = document.createElement('button');
     deleteButton.setAttribute('type', 'button');
     deleteButton.id = 'deleteList';
-    deleteButton.classList.add('editButton');
+    deleteButton.classList.add('deleteButton');
     deleteButton.innerHTML = 'delete';
     deleteButton.addEventListener('click', deleteListItem);
-    listEdit.append(editButton, deleteButton);
-    controlDiv.appendChild(controlSpan);
-    control.appendChild(controlDiv);
-    object.append(listObject, listProduce);
-    quantity.append(listQuantity, listQuantityType);
+    itemControl.append(editButton, deleteButton);
+    control.appendChild(controlSpan);
+    var linebreak = document.createElement('br');
+    listItem.append(itemName, linebreak, itemQuantity, itemUnit);
 
-    var listCategoryItems = document.createElement('div');
-    var listCategory = document.createElement('div');
-    listCategory.setAttribute('class', 'categoryHeader');
+    var itemCategoryText = document.createElement('div');
+    var itemCategory = document.createElement('div');
+    itemCategory.setAttribute('class', 'categoryHeader');
     var emptyHolder = document.createElement('div');
 
     if (catList.length > 0) {
         if (category != catList[catList.length - 1]) {
-            listCategoryItems.innerHTML = category;
-            listCategory.append(control,listCategoryItems);
-            list.append(listCategory);
+            itemCategoryText.innerHTML = category;
+            itemCategory.append(control,itemCategoryText);
+            list.append(itemCategory);
             categoryCreate = true;
         }  else {
-            listItems.append(control, object, quantity, listEdit);
+            listItems.append(control, listItem, itemControl);
             list.append(listItems);
         }
     } else if (catList.length === 0) {
-            listCategoryItems.innerHTML = category;
-        listCategory.append(control,listCategoryItems);
-            list.append(listCategory);
+            itemCategoryText.innerHTML = category;
+        itemCategory.append(control,itemCategoryText);
+            list.append(itemCategory);
             categoryCreate = true;
     }
     //the following code is keeping the category headers from displaying a checkbox for full category control
     if (categoryCreate) {
-        listItems.append(control, object, quantity, listEdit);
+        listItems.append(control, listItem, itemControl);
             list.append(listItems);
     }
     catList.push(category);

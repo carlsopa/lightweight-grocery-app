@@ -13,13 +13,13 @@
     <nav>
         <select id="titleList">
             <option>Select a grocery list</option>
-        </select>
-        <input id="foodInput" type="text" />
-        <select id="categoryList"></select>
-        <input id="qtyInput" type="number" value="1" min="1"/>
-        <select id="qtyList"></select>
+        </select><br />
+        <input id="newItemName" type="text" />
+        <select id="newItemCategory"></select>
+        <input id="newItemQuantity" class="num" type="number" value="1" min="1"/>
+        <select id="newItemUnit"></select>
         <button id="foodButton" type="button">Add food</button>
-        <button id="toggleEdit" type="button">Show edit</button>
+        <!--<button id="toggleEdit" type="button">Show edit</button>-->
     </nav>
     <main>
         <div id="ItemControl">
@@ -27,11 +27,11 @@
                 <div id="titles"></div>
                 <div id="modalContent">
                     <form>
-                        <label for="modalFoodInput">List item: </label><input id="modalFoodInput" type="text" /><br />
-                        <label for="modalCategoryList">Item category: </label><select id="modalCategoryList"></select><br />
-                        <label for="modalQtyInput">Quantity: </label><input id="modalQtyInput" type="number" value="1" min="1" /><br />
-                        <label for="modalQtyList">Measurement</label><select id="modalQtyList"></select>
-                        <button id="updateModal" type="button">Update</button><button id="cancelModal" type="button">Cancel</button>
+                        <label for="editItemName">List item: </label><input id="editItemName" type="text" /><br />
+                        <label for="editItemCategory">Item category: </label><select id="editItemCategory"></select><br />
+                        <label for="editItemQuantity">Quantity: </label><input id="editItemQuantity" class="num" type="number" value="1" min="1" /><br />
+                        <label for="editItemUnit">Measurement</label><select id="editItemUnit"></select>
+                        <button id="updateEdit" type="button">Update</button><button id="cancelEdit" type="button">Cancel</button>
                     </form>
                 </div>
             </div>
@@ -40,6 +40,7 @@
         </div>
 
         <div id="bottomNav">
+            <a id="editList" href="#">Edit a List</a>
             <a id="addList" href="#">Add a List</a>
             <a id="deleteList" href="#">Delete a List</a>
             <a id="deleteList" href="#">Share a list</a>

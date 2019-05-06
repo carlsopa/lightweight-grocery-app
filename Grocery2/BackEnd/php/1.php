@@ -7,25 +7,24 @@ $items = "items";
 $x = "id";
 $data = "data";
 $t = "type";
+$ix = 'index';
 //get the data from the front end and convert it over
-//sendData = [{'type':type, 'id': listIndex, 'data': data }];
 $dataTotal = json_decode(file_get_contents( "php://input" ), true);
 $type = $dataTotal[0][$t];
 $id = $dataTotal[0][$x];
 $info = $dataTotal[0][$data];
-print_r($id);
-//echo $type;
 echo "----------------------------------------------------------------";
-//echo $id; 
-echo'++++++++++++++++++++++++++++++++++++++';
 if($type=='update'){
-	$jsonData[$id][$items]=$dataTotal[0][$data];
+	$jsonData[$id][$items] = $info;
+}elseif($type=='newObject'){
+	array_push($jsonData[$id][$items],$info);
 }elseif($type=='new'){
-echo"this is good";
 	$jsonData[] = array("title"=>$info,"items"=>[]);
-}
-elseif($type=='delete'){
+	print_r($jsonData);
+}elseif($type=='delete'){
 	array_splice($jsonData,$info,1);
+}elseif($type=='deleteItem'){
+	echo array_splice($jsonData[$id][$items],$info,1);
 }
  $newJsonString = json_encode($jsonData);
  file_put_contents($file, $newJsonString);
