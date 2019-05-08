@@ -1,0 +1,97 @@
+[
+  
+  {
+    "title": "testa",
+    "items": [
+      {
+        "product": "hamburger",
+        "quantity": 1,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "sugar",
+        "quantity": 1,
+        "category": "Baking Goods",
+        "unit": "Lb"
+      },
+      {
+        "product": "broccolli",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Lb"
+      },
+      {
+        "product": "ground turkey",
+        "quantity": 1,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "chicken breast",
+        "quantity": 2,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "pineapple",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "gabanzo beans",
+        "quantity": 3,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "diced tomatos",
+        "quantity": 2,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "brown sugar",
+        "quantity": 1,
+        "category": "Baking Goods",
+        "unit": "Lb"
+      },
+      {
+        "product": "milk",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Oz"
+      },
+      {
+        "product": "cheddar cheese",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Each"
+      },
+      {
+        "product": "eggo waffles",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Each"
+      },
+      {
+        "product": "pizza",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Each"
+      },
+      {
+        "product": "almonds",
+        "quantity": 1,
+        "category": "Other",
+        "unit": "Each"
+      }
+    ]
+  }
+  
+  
+  
+  
+  
+]
