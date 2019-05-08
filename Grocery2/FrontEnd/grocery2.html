@@ -1,29 +1,51 @@
-<html>
+﻿<!DOCTYPE html>
 
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-    <script src="Javascript/grocery2_javascript.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="Css/grocery2_css.css">
+    <script src="Javascript/grocery2_javascript.js"></script>
+
+    <meta charset="utf-8" />
+    <title></title>
 </head>
-
 <body>
-    <header class="bar">
-        <select id="list_select">
-          <option value="">Grocery Lists</option>
-        </select>
-    </header>
-    <main>
-        <div id="content_list"></div>
-
-    </main>
-    <nav class="bar_bottom">
-        <div id="nav_bg">
-        <div id="cross_circle_cutaway"></div>
-        <span id="cross_circle"><div id="cross"></div></span>
-            </div>
+    <nav>
+        <select id="titleList">
+            <option>Select a grocery list</option>
+        </select><br />
+        <input id="newItemName" type="text" />
+        <select id="newItemCategory"></select>
+        <input id="newItemQuantity" class="num" type="number" value="1" min="1"/>
+        <select id="newItemUnit"></select>
+        <button id="foodButton" type="button">Add food</button>
+        <!--<button id="toggleEdit" type="button">Show edit</button>-->
     </nav>
+    <main>
+        <div id="ItemControl">
+            <div id="modal" class="modalBox">
+                <div id="titles"></div>
+                <div id="modalContent">
+                    <form id="modalEditForm">
+                        <label for="editItemName">List item: </label><input id="editItemName" type="text" />
+                        <label for="editItemCategory">Item category: </label><select id="editItemCategory"></select>
+                        <label for="editItemQuantity">Quantity: </label><input id="editItemQuantity" class="num" type="number" value="1" min="1" />
+                        <label for="editItemUnit">Measurement</label><select id="editItemUnit"></select>
+                        <button id="updateEdit" type="button">Update</button>
+                    </form>
+                </div>
+            </div>
+            <div id="list"></div>
+            <div id="cart"></div>
+        </div>
+
+        <div id="bottomNav">
+            <a id="editList" href="#">Edit a List</a>
+            <a id="addList" href="#">Add a List</a>
+            <a id="deleteList" href="#">Delete a List</a>
+            <a id="deleteList" href="#">Share a list</a>
+        </div>
+    </main>
 
 </body>
-
 </html>

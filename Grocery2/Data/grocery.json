@@ -1,1 +1,97 @@
-[{"title":"listb","items":[{"product":"frozen peas","quantity":4,"category":"Canned Goods","unit":"Lb"},{"product":"tomato paste","quantity":6,"category":"Canned Goods","unit":"Each"},{"product":"chicken peas","quantity":8,"category":"Canned Goods","unit":"Oz"},{"product":"pound cake","quantity":3,"category":"Other","unit":"Each"},{"product":"red peppers","quantity":8,"category":"Produce","unit":"Each"},{"product":"root beer","quantity":2,"category":"Snacks","unit":"Each"},{"product":"cup cakes","quantity":2,"category":"bakery","unit":"Each"},{"product":"hamburger","quantity":1,"category":"meat","unit":"Lb"},{"product":"triscuit","quantity":1,"category":"snacks","unit":"Each"}]},{"title":"michelle","items":[{"product":"strawberries","quantity":1,"category":"Produce","unit":"Lb"}]},{"title":"paulie","items":[]},{"title":"metro","items":[]},{"title":"rainy","items":[{"product":"waffles","quantity":5,"category":"Frozen Foods","unit":"Each"},{"product":"eggs","quantity":1,"category":"Meat","unit":"Each"}]},{"title":"window","items":[{"product":"","quantity":1,"category":"Other","unit":"Each"}]}]
+[
+  
+  {
+    "title": "testa",
+    "items": [
+      {
+        "product": "hamburger",
+        "quantity": 1,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "sugar",
+        "quantity": 1,
+        "category": "Baking Goods",
+        "unit": "Lb"
+      },
+      {
+        "product": "broccolli",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Lb"
+      },
+      {
+        "product": "ground turkey",
+        "quantity": 1,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "chicken breast",
+        "quantity": 2,
+        "category": "Meat",
+        "unit": "Lb"
+      },
+      {
+        "product": "pineapple",
+        "quantity": 1,
+        "category": "Produce",
+        "unit": "Each"
+      },
+      {
+        "product": "gabanzo beans",
+        "quantity": 3,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "diced tomatos",
+        "quantity": 2,
+        "category": "Canned Goods",
+        "unit": "Each"
+      },
+      {
+        "product": "brown sugar",
+        "quantity": 1,
+        "category": "Baking Goods",
+        "unit": "Lb"
+      },
+      {
+        "product": "milk",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Oz"
+      },
+      {
+        "product": "cheddar cheese",
+        "quantity": 1,
+        "category": "Dairy",
+        "unit": "Each"
+      },
+      {
+        "product": "eggo waffles",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Each"
+      },
+      {
+        "product": "pizza",
+        "quantity": 1,
+        "category": "Frozen Foods",
+        "unit": "Each"
+      },
+      {
+        "product": "almonds",
+        "quantity": 1,
+        "category": "Other",
+        "unit": "Each"
+      }
+    ]
+  }
+  
+  
+  
+  
+  
+]
