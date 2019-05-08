@@ -7,3 +7,4 @@ As a test and challenge to myself, I built this using only pure JavaScript (no l
 The overall design of the app was made keeping both mobile and desktop platforms in mind.  Using viewport heights instead of percentages, it scales evenly across multiple display types.  It was tested on a standard desktop, as well as Android and Apple phones.</p>
 <p><b>Future Additions</b>:
 Going forward I plan to add an individual user profile function to this.  That will allow individual users to track and work with their own lists, as well as customize it in other ways.  I would also like to incorporate a weekly ad guide for specific stores.</p>
+<a href="https://carlsopa.github.io/lightweight-grocery-app/Grocery2/FrontEnd/grocery2.html">Grocery App</a>
