@@ -1,5 +1,5 @@
 # GroceryList
-A simple lightweight grocery app
+A simple lightweight grocery app<br/>
 History:
 This project started out as a way for my girlfriend to easily make and track her grocery lists during the weekly shopping trips.  There are many list apps out there.  However, I wanted to take what I saw as the best of each of the available options, and combine them into one lightweight app for her convenience.
 Design:
