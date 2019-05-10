@@ -65,7 +65,7 @@ function NavButtons() {
 }
 function updateList(type,data) {
     var request = new XMLHttpRequest();
-    request.open('POST', '../BackEnd/php/grocerylist2_php.php');
+    request.open('POST', 'http://68.33.20.153:81/grocery/Grocery2/BackEnd/php/grocerylist2_php.php');
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     console.log(listIndex);
         sendData = [{ 'type': type, 'id': listIndex, 'data': data }];
