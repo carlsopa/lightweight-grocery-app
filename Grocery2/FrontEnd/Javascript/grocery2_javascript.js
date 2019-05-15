@@ -1,5 +1,4 @@
 var shopping
-var userLists
 var listIndex
 var dataCategory = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
 var dataIndex = ['product', 'quantity', 'category'];
@@ -11,10 +10,6 @@ var copyNode;
 var trigger = false;
 var itemIndex;
 var list = document.querySelector('#titleList');
-var newItemCategoryList;
-var editItemCategoryList;
-var newItemUnitList;
-var editItemUnitList;
 var newItemName;
 var newItemQuantity;
 var newItemUnit;
@@ -73,16 +68,7 @@ function checkUser() {
 
                 document.getElementById('welcome').append(document.createTextNode(name));
                 TitlePopulate();
-                newItemCategoryList = document.getElementById('newItemCategory');
-                editItemCategoryList = document.getElementById('editItemCategory');
-                newItemUnitList = document.getElementById('newItemUnit');
-                editItemUnitList = document.getElementById('editItemUnit')
-                newItemName = document.getElementById('newItemName');
-                newItemQuantity = document.getElementById('newItemQuantity');
-                newItemUnit = document.getElementById('newItemUnit');
-                foodButton = document.getElementById('foodButton');
                 cart = document.getElementById('cart');
-                userLists = []
 
                 categoryPopulate();
                 addFood();
@@ -120,13 +106,13 @@ function updateList(type, data, listIndex) {
 }
 //take the list titles from the json file and place them in the drop down box
 function TitlePopulate() {
-    var list = document.querySelector('#titleList');
-    list.options.length = 1;
+    const titleList = document.getElementById('titleList');
+    titleList.options.length = 1;
     for (x = 0; x < shopping.length; x++) {
         var option = document.createElement('option');
         option.innerHTML = shopping[x]['title'];
         option.setAttribute('index', x);
-        list.appendChild(option);
+        titleList.appendChild(option);
         console.log(option);
 
     }
@@ -137,6 +123,12 @@ function TitlePopulate() {
 
 //create the dropdown box for the user input
 function categoryPopulate() {
+    const newItemCategoryList = document.getElementById('newItemCategory');
+    const newItemUnitList = document.getElementById('newItemUnit');
+    const editItemCategoryList = document.getElementById('editItemCategory');
+    const editItemUnitList = document.getElementById('editItemUnit')
+
+
     for (items in dataCategory) {
         var option = document.createElement('option');
         option.innerHTML = items;
@@ -166,10 +158,15 @@ function categoryPopulate() {
 }
 //add food from the input to the grocery list
 function addFood() {
+    const foodButton = document.getElementById('foodButton');
     foodButton.addEventListener('click', (event) => {
+        const newItemName = document.getElementById('newItemName');
+        const newItemQuantity = document.getElementById('newItemQuantity');
+        const newItemUnit = document.getElementById('newItemUnit');
 
-        var foodCategory = dataCategory[newItemCategory.selectedIndex];
-        var foundBoolean = false;
+
+        const foodCategory = dataCategory[newItemCategory.selectedIndex];
+        let foundBoolean = false;
         if (listIndex == undefined) {
             alert("please choose a list to add food");
         } else {
@@ -439,7 +436,7 @@ function deleteListItem(e) {
 }
 
 function TitleDesign() {
-    var list = document.getElementById('titles');
+    const list = document.getElementById('titles');
     while (list.firstChild) {
         console.log(list.firstChild);
         list.removeChild(list.firstChild);
@@ -447,16 +444,16 @@ function TitleDesign() {
     for (x in shopping) {
         title = shopping[x].title;
 
-        var titleItem = document.createElement('div');
+        const titleItem = document.createElement('div');
         titleItem.setAttribute('class', 'titleItem');
         titleItem.setAttribute('index', x);
-        var control = document.createElement('div');
+        const control = document.createElement('div');
         control.setAttribute('id', 'control');
-        var controlSpan = document.createElement('input');
+        const controlSpan = document.createElement('input');
         controlSpan.setAttribute('type', 'checkbox');
         controlSpan.addEventListener('change', deleteTitle);
-        var titleObject = document.createElement('div');
-        var titleBox = document.createElement('div');
+        const titleObject = document.createElement('div');
+        const titleBox = document.createElement('div');
         titleBox.innerHTML = title;
         control.append(controlSpan);
         titleObject.append(titleBox);
