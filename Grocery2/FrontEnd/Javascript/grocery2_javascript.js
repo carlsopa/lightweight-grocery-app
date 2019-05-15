@@ -3,7 +3,7 @@ var listIndex
 var dataCategory = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
 var dataIndex = ['product', 'quantity', 'category'];
 var measureCategory = ['Each', 'Lb', 'Oz', 'Fl Oz']
-var lst
+    //var lst
 var catList = []
 var cartList = []
 var copyNode;
@@ -85,15 +85,21 @@ function checkUser() {
 }
 
 function updateList(type, data, listIndex) {
-    console.log(shopping);
-    console.log(data);
-    console.log(listIndex);
-    var listId = shopping[listIndex]['listId'];
+    if (!listIndex) {
+        console.log(data);
+        sendData = [{ 'type': type, 'id': data }]
+    } else {
+        console.log(shopping);
+        console.log(data);
+        console.log(listIndex);
+        var listId = shopping[listIndex]['listId'];
+        sendData = [{ 'type': type, 'id': listId, 'userId': userId, 'data': data }];
+    }
     var request = new XMLHttpRequest();
     request.open('POST', '../BackEnd/php/grocerylist2_php.php');
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     console.log(listId);
-    sendData = [{ 'type': type, 'id': listId, 'userId': userId, 'data': data }];
+
     sendData = JSON.stringify(sendData);
     console.log(sendData);
     request.send(sendData);
@@ -130,27 +136,27 @@ function categoryPopulate() {
 
 
     for (items in dataCategory) {
-        var option = document.createElement('option');
+        const option = document.createElement('option');
         option.innerHTML = items;
         option.innerHTML = dataCategory[items];
         option.setAttribute('index', items);
         newItemCategoryList.append(option);
     }
     for (items in measureCategory) {
-        var option = document.createElement('option');
+        const option = document.createElement('option');
         option.innerHTML = measureCategory[items];
         option.setAttribute('index', items);
         newItemUnitList.appendChild(option);
     }
     for (items in dataCategory) {
-        var option = document.createElement('option');
+        const option = document.createElement('option');
         option.innerHTML = items;
         option.innerHTML = dataCategory[items];
         option.setAttribute('index', items);
         editItemCategoryList.append(option);
     }
     for (items in measureCategory) {
-        var option = document.createElement('option');
+        const option = document.createElement('option');
         option.innerHTML = measureCategory[items];
         option.setAttribute('index', items);
         editItemUnitList.appendChild(option);
@@ -172,13 +178,13 @@ function addFood() {
         } else {
             console.log(shopping);
             console.log(listIndex);
-            lst = shopping[listIndex].items;
+            let lst = shopping[listIndex].items;
             for (x = 0; x < lst.length; x++) {
                 if (lst[x].product == newItemName.value) {
                     lst[x].quantity = parseInt(lst[x].quantity) + parseInt(newItemQuantity.value);
                     foundBoolean = true;
                     console.log(lst[x]);
-                    updateList('update', lst);
+                    updateList('update', lst, listIndex);
                     break;
                 }
             }
@@ -186,7 +192,7 @@ function addFood() {
             if (!foundBoolean) {
                 console.log(lst);
                 lst.push({ product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value })
-                updateList('newObject', { product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value });
+                updateList('newObject', { product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value }, listIndex);
             }
             listPopulate(listIndex);
         }
@@ -217,19 +223,6 @@ function newList() {
     }
 }
 
-function getMasterListLength() {
-    rtn = '';
-    var requestUrl = '../Data/groceryLists.json';
-    var request = new XMLHttpRequest();
-    request.open('GET', requestUrl);
-    request.responseType = 'json';
-    request.send();
-    request.onload = function() {
-        return request.response;
-    }
-    console.log(rtn);
-}
-
 function getList() {
     var title
     var list = document.querySelector('#titleList');
@@ -245,6 +238,7 @@ function getList() {
 }
 
 function deleteList() {
+    console.log(shopping);
     var modal = document.getElementById('modal');
     modal.addEventListener('click', ModalClose);
     modal.classList.add('visible');
@@ -255,14 +249,16 @@ function deleteList() {
 }
 
 function deleteTitle() {
-    console.log(shopping);
+    //console.log("shopping");
     if (this.checked) {
         title = this.parentNode.nextSibling.firstChild.innerHTML;
         var index = this.parentNode.parentNode.getAttribute('index');
         console.log(index);
         if (window.confirm("Would you like to delete list: " + title + "?")) {
+            console.log(shopping[index]);
+
+            updateList('delete', shopping[index]['listId']);
             shopping.splice(index, 1);
-            updateList('delete', index);
             ModalClose();
             TitlePopulate();
         }
@@ -274,7 +270,7 @@ function listPopulate(index) {
     if (index < 0) {
         window.alert('please select a list from the drop down to continue.');
     } else {
-        var list = document.querySelector('#list');
+        var list = document.getElementById('list');
         while (list.firstChild) {
             list.removeChild(list.firstChild);
         }
@@ -406,7 +402,7 @@ function updateEditModal() {
             shopping[listIndex].items[itemIndex].category = modalCategory;
             shopping[listIndex].items[itemIndex].unit = modalQtyLst;
 
-            updateList('update', shopping[listIndex].items);
+            updateList('update', shopping[listIndex].items, 0);
             if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
                 listPopulate(listIndex);
             }
@@ -431,8 +427,9 @@ function deleteListItem(e) {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
     shopping[listIndex].items.splice(itemIndex, 1);
+    //console.log(listIndex);
+    updateList('deleteItem', itemIndex, listIndex);
     listPopulate(listIndex);
-    updateList('deleteItem', itemIndex);
 }
 
 function TitleDesign() {
@@ -515,7 +512,7 @@ function listDesign(index, item, category, quantity, unit) {
     var itemCategoryText = document.createElement('div');
     var itemCategory = document.createElement('div');
     itemCategory.setAttribute('class', 'categoryHeader');
-    var emptyHolder = document.createElement('div');
+    //var emptyHolder = document.createElement('div');
 
     if (catList.length > 0) {
         if (category != catList[catList.length - 1]) {
