@@ -65,7 +65,27 @@ label {
 #ItemControl{
     overflow:auto;
 }
-#list{
+#listControl{
+    visibility:hidden;
+}
+#listWelcome {
+    display: grid;
+    grid-template-columns: auto auto;
+    height: 100%;
+    /*visibility:hidden;*/
+    /*display:none;*/
+}
+#welomeBanner {
+    float: right;
+}
+#welcomeTitle{
+    font-size: 2.5em;
+    place-self: center;
+}
+#loginControl{
+    float:right;
+}
+#list {
     display: grid;
     grid-auto-rows: auto;
     border-bottom: 2px solid black;
