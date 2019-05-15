@@ -1,6 +1,7 @@
 var shopping
+var userLists
 var listIndex
-var dataCategory = ['Other','Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
+var dataCategory = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
 var dataIndex = ['product', 'quantity', 'category'];
 var measureCategory = ['Each', 'Lb', 'Oz', 'Fl Oz']
 var lst
@@ -19,32 +20,13 @@ var newItemQuantity;
 var newItemUnit;
 var foodButton;
 var cart;
-var requestUrl = '../Data/grocery.json';
-var request = new XMLHttpRequest();
-request.open('GET', requestUrl);
-request.responseType = 'json';
-request.send();
+var userName = '';
+var userId = '';
 
-request.onload = function () {
-    shopping = request.response;
-    TitlePopulate();
-    newItemCategoryList = document.querySelector("#newItemCategory");
-    editItemCategoryList = document.getElementById('editItemCategory');
-    newItemUnitList = document.querySelector("#newItemUnit");
-    editItemUnitList = document.getElementById('editItemUnit')
-    newItemName = document.querySelector("#newItemName");
-    newItemQuantity = document.querySelector("#newItemQuantity");
-    newItemUnit = document.querySelector("#newItemUnit");
-    foodButton = document.querySelector('#foodButton');
-    cart = document.querySelector("#cart");
-
-    categoryPopulate();
-    addFood();
-    getList();
-    ModalButtons();
+window.onload = (event) => {
     NavButtons();
-    
-};
+}
+
 function Handler(e) {
     console.log(e.target.parentNode.parentNode);
     if (e.target.type == 'checkbox') {
@@ -58,21 +40,79 @@ function Handler(e) {
     }
 }
 
+function SecondPageShow() {
+    document.getElementById('listWelcome').style.visibility = 'hidden';
+    document.getElementById('listWelcome').style.display = 'none';
+    document.getElementById('listControl').style.visibility = 'visible';
+}
+
 function NavButtons() {
     document.getElementById('addList').addEventListener('click', newList);
     document.getElementById('deleteList').addEventListener('click', deleteList);
     document.getElementById('shareList');
+    document.getElementById('userLogin').addEventListener('click', checkUser);
 }
-function updateList(type,data) {
-    var request = new XMLHttpRequest();
-    request.open('POST', 'https://68.33.20.153:443/grocery/Grocery2/BackEnd/php/grocerylist2_php.php');
-    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+function checkUser() {
+    var name = document.getElementById('userName').value
+    if (name != '') {
+        const userRequest = new XMLHttpRequest();
+        userRequest.open('POST', '../BackEnd/php/grocerylist2_php.php');
+        userRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        sendData = [{ 'name': name }];
+        sendData = JSON.stringify(sendData);
+        userRequest.send(sendData);
+
+        userRequest.onload = function() {
+            if (userRequest.status === 200) {
+                SecondPageShow();
+                //console.log(userRequest.response);
+                shopping = JSON.parse(userRequest.response);
+                userName = shopping.shift();
+                userId = shopping.shift();
+
+                document.getElementById('welcome').append(document.createTextNode(name));
+                TitlePopulate();
+                newItemCategoryList = document.getElementById('newItemCategory');
+                editItemCategoryList = document.getElementById('editItemCategory');
+                newItemUnitList = document.getElementById('newItemUnit');
+                editItemUnitList = document.getElementById('editItemUnit')
+                newItemName = document.getElementById('newItemName');
+                newItemQuantity = document.getElementById('newItemQuantity');
+                newItemUnit = document.getElementById('newItemUnit');
+                foodButton = document.getElementById('foodButton');
+                cart = document.getElementById('cart');
+                userLists = []
+
+                categoryPopulate();
+                addFood();
+                getList();
+                ModalButtons();
+
+            } else if (request.status === 400) {
+                console.log(request.response);
+            }
+        }
+    } else {
+        alert("please enter your name to continue");
+    }
+}
+
+function updateList(type, data, listIndex) {
+    console.log(shopping);
+    console.log(data);
     console.log(listIndex);
-        sendData = [{ 'type': type, 'id': listIndex, 'data': data }];
+    var listId = shopping[listIndex]['listId'];
+    var request = new XMLHttpRequest();
+    request.open('POST', '../BackEnd/php/grocerylist2_php.php');
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    console.log(listId);
+    sendData = [{ 'type': type, 'id': listId, 'userId': userId, 'data': data }];
     sendData = JSON.stringify(sendData);
+    console.log(sendData);
     request.send(sendData);
-    
-    request.onload = function () {
+
+    request.onload = function() {
         if (request.status === 200) {
             console.log(request.responseText);
         }
@@ -87,10 +127,11 @@ function TitlePopulate() {
         option.innerHTML = shopping[x]['title'];
         option.setAttribute('index', x);
         list.appendChild(option);
-        
+        console.log(option);
+
     }
     TitleDesign();
-    
+
 }
 
 
@@ -126,8 +167,9 @@ function categoryPopulate() {
 //add food from the input to the grocery list
 function addFood() {
     foodButton.addEventListener('click', (event) => {
-            var foodCategory = dataCategory[newItemCategory.selectedIndex];
-            var foundBoolean = false;
+
+        var foodCategory = dataCategory[newItemCategory.selectedIndex];
+        var foundBoolean = false;
         if (listIndex == undefined) {
             alert("please choose a list to add food");
         } else {
@@ -157,15 +199,40 @@ function addFood() {
 function newList() {
     title = window.prompt("enter a new list name: ");
     if (title != null) {
-        updateList('new', title);
-        shopping.push({ 'title': title, 'items': [] });
-        TitlePopulate();
-        index = shopping.length
-        //console.log(document.querySelector('#titleList').options[shopping.length]);
-        document.querySelector('#titleList').options[index].selected = true;
-        listIndex = index-1;
+        console.log(shopping);
+        var requestUrl = '../Data/groceryLists.json';
+        var request = new XMLHttpRequest();
+        request.open('GET', requestUrl);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+            var len = request.response.length + 1;
+            shopping.push({ 'userId': userId, 'listId': len, 'title': title, 'items': [] });
+            index = shopping.length;
+            console.log(shopping);
+            listIndex = index - 1;
+            updateList('new', title, listIndex);
+            TitlePopulate();
+            console.log(document.querySelector('#titleList'));
+            document.querySelector('#titleList').options[index].selected = true;
+            console.log("here");
+        }
     }
 }
+
+function getMasterListLength() {
+    rtn = '';
+    var requestUrl = '../Data/groceryLists.json';
+    var request = new XMLHttpRequest();
+    request.open('GET', requestUrl);
+    request.responseType = 'json';
+    request.send();
+    request.onload = function() {
+        return request.response;
+    }
+    console.log(rtn);
+}
+
 function getList() {
     var title
     var list = document.querySelector('#titleList');
@@ -173,12 +240,13 @@ function getList() {
     list.addEventListener('change', (event) => {
 
         title = event.target.selectedIndex;
-            listIndex = title - 1;
-            listPopulate(listIndex);
-        
+        listIndex = title - 1;
+        listPopulate(listIndex);
+
     })
-    
+
 }
+
 function deleteList() {
     var modal = document.getElementById('modal');
     modal.addEventListener('click', ModalClose);
@@ -186,15 +254,16 @@ function deleteList() {
     document.getElementById('titles').style.visibility = 'visible';
     document.body.style.overflow = 'hidden';
     document.getElementById('list').style.visibility = 'hidden';
-    document.getElementById('modalContent').style.visibility='hidden';
+    document.getElementById('modalContent').style.visibility = 'hidden';
 }
+
 function deleteTitle() {
     console.log(shopping);
     if (this.checked) {
         title = this.parentNode.nextSibling.firstChild.innerHTML;
         var index = this.parentNode.parentNode.getAttribute('index');
         console.log(index);
-        if (window.confirm("Would you like to delete list: "+title+"?")) {
+        if (window.confirm("Would you like to delete list: " + title + "?")) {
             shopping.splice(index, 1);
             updateList('delete', index);
             ModalClose();
@@ -221,9 +290,10 @@ function listPopulate(index) {
         }
     }
 }
+
 function listControl() {
     if (this.checked) {
-        var parentList = this.parentNode.parentNode.parentNode;   
+        var parentList = this.parentNode.parentNode.parentNode;
         var activeNode = this.parentNode.parentNode;
         copyNode = activeNode.cloneNode(true);
         copyNode.addEventListener('change', cartControl);
@@ -234,7 +304,7 @@ function listControl() {
                     break;
                 } else {
                     cart.append(copyNode);
-                }                  
+                }
             }
         } else {
             cart.append(copyNode);
@@ -242,6 +312,7 @@ function listControl() {
     }
     parentList.removeChild(activeNode);
 }
+
 function cartToListControl(e) {
     if (!this.checked) {
         console.log(this);
@@ -289,7 +360,7 @@ function cartControl() {
                 }
             }
         }
-    } 
+    }
     document.querySelector("#cart").removeChild(activeNode);
 }
 
@@ -300,11 +371,11 @@ function itemEdit(e) {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
     console.log(itemIndex);
-    var listIndex = document.querySelector('#titleList').selectedIndex-1;
+    var listIndex = document.querySelector('#titleList').selectedIndex - 1;
     var list = shopping[listIndex].items[itemIndex];
     document.getElementById("editItemName").value = list['product'];
-    document.getElementById("editItemCategory").value=list['category'];
-    document.getElementById("editItemQuantity").value=list['quantity'];
+    document.getElementById("editItemCategory").value = list['category'];
+    document.getElementById("editItemQuantity").value = list['quantity'];
     document.getElementById("editItemUnit").value = list['unit'];
     var modal = document.getElementById('modal');
     modal.classList.add('visible');
@@ -315,11 +386,13 @@ function itemEdit(e) {
     document.getElementById('list').style.visibility = 'hidden';
     document.getElementById('titles').style.visibility = 'hidden';
 }
+
 function ModalButtons() {
     var modalUpdate = document.getElementById('updateEdit');
     modalUpdate.addEventListener('click', updateEditModal);
-    
+
 }
+
 function updateEditModal() {
     modalFood = document.getElementById("editItemName").value;
     modalCategory = document.getElementById("editItemCategory").value;
@@ -344,6 +417,7 @@ function updateEditModal() {
     }
     ModalClose();
 }
+
 function ModalClose() {
     console.log(this);
     document.getElementById('modalContent').style.visibility = 'hidden';
@@ -352,6 +426,7 @@ function ModalClose() {
     document.getElementById('list').style.visibility = 'visible';
     document.body.style.overflow = 'auto';
 }
+
 function deleteListItem(e) {
     if (e != null) {
         itemIndex = e.target.parentNode.parentNode.getAttribute('index');
@@ -390,7 +465,7 @@ function TitleDesign() {
     }
 }
 //the building of the list display
-function listDesign(index,item, category, quantity,unit) {
+function listDesign(index, item, category, quantity, unit) {
     var categoryCreate = false;
     //top level selector
     var list = document.querySelector('#list');
@@ -416,7 +491,7 @@ function listDesign(index,item, category, quantity,unit) {
     //element for the category
     var itemQuantity = document.createElement('span');
     itemQuantity.setAttribute('class', 'quantityValue');
-     itemQuantity.innerHTML = quantity;
+    itemQuantity.innerHTML = quantity;
     var itemUnit = document.createElement('span');
     itemUnit.setAttribute('class', 'left quantityType');
     itemUnit.innerHTML = unit;
@@ -448,23 +523,23 @@ function listDesign(index,item, category, quantity,unit) {
     if (catList.length > 0) {
         if (category != catList[catList.length - 1]) {
             itemCategoryText.innerHTML = category;
-            itemCategory.append(control,itemCategoryText);
+            itemCategory.append(control, itemCategoryText);
             list.append(itemCategory);
             categoryCreate = true;
-        }  else {
+        } else {
             listItems.append(control, listItem, itemControl);
             list.append(listItems);
         }
     } else if (catList.length === 0) {
-            itemCategoryText.innerHTML = category;
-        itemCategory.append(control,itemCategoryText);
-            list.append(itemCategory);
-            categoryCreate = true;
+        itemCategoryText.innerHTML = category;
+        itemCategory.append(control, itemCategoryText);
+        list.append(itemCategory);
+        categoryCreate = true;
     }
     //the following code is keeping the category headers from displaying a checkbox for full category control
     if (categoryCreate) {
         listItems.append(control, listItem, itemControl);
-            list.append(listItems);
+        list.append(listItems);
     }
     catList.push(category);
 }
