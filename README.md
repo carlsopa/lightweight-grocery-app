@@ -1,7 +1,7 @@
 # GroceryList
-Follow the link to the working demo of my grocery app:<br/>
-<a href="https://carlsopa.github.io/lightweight-grocery-app/Grocery2/FrontEnd/grocery2.html">Grocery App</a>
-
+Follow the link to the working demo of my grocery app and the github repo:<br/>
+<a href="http://localhost:81/grocery/Grocery2/FrontEnd/grocery2.html">Grocery App</a><br />
+<a href="https://github.com/carlsopa/lightweight-grocery-app">GitHub Repo</a>
 A simple lightweight grocery app<br/>
 <p><b>History</b>:
 This project started out as a way for my girlfriend to easily make and track her grocery lists during the weekly shopping trips.  There are many list apps out there.  However, I wanted to take what I saw as the best of each of the available options, and combine them into one lightweight app for her convenience.</p>
