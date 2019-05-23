@@ -85,23 +85,24 @@ function checkUser() {
 }
 
 function updateList(type, data, listIndex) {
-    if (!listIndex) {
+    let listId;
+    if (arguments.length == 2) {
         console.log(data);
         sendData = [{ 'type': type, 'id': data }]
     } else {
         console.log(shopping);
         console.log(data);
         console.log(listIndex);
-        var listId = shopping[listIndex]['listId'];
+        listId = shopping[listIndex]['listId'];
         sendData = [{ 'type': type, 'id': listId, 'userId': userId, 'data': data }];
     }
     var request = new XMLHttpRequest();
     request.open('POST', '../BackEnd/php/grocerylist2_php.php');
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     console.log(listId);
-
-    sendData = JSON.stringify(sendData);
     console.log(sendData);
+    sendData = JSON.stringify(sendData);
+    //console.log(sendData);
     request.send(sendData);
 
     request.onload = function() {
@@ -119,11 +120,8 @@ function TitlePopulate() {
         option.innerHTML = shopping[x]['title'];
         option.setAttribute('index', x);
         titleList.appendChild(option);
-        console.log(option);
-
     }
     TitleDesign();
-
 }
 
 
@@ -169,6 +167,7 @@ function addFood() {
         const newItemName = document.getElementById('newItemName');
         const newItemQuantity = document.getElementById('newItemQuantity');
         const newItemUnit = document.getElementById('newItemUnit');
+        let listItem = shopping[listIndex]['items'].length + 1;
 
 
         const foodCategory = dataCategory[newItemCategory.selectedIndex];
@@ -191,8 +190,8 @@ function addFood() {
 
             if (!foundBoolean) {
                 console.log(lst);
-                lst.push({ product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value })
-                updateList('newObject', { product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value }, listIndex);
+                lst.push({ listItem: listItem, product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value })
+                updateList('newObject', { listItem: listItem, product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value }, parseInt(listIndex));
             }
             listPopulate(listIndex);
         }
@@ -291,7 +290,7 @@ function listControl() {
         copyNode = activeNode.cloneNode(true);
         copyNode.addEventListener('change', cartControl);
         if (cart.children.length > 0) {
-            for (x = 0; x < cart.children.length; x++) {
+            for (let x = 0; x < cart.children.length; x++) {
                 if (parseInt(activeNode.getAttribute("index")) < parseInt(cart.children[x].getAttribute("index"))) {
                     cart.insertBefore(copyNode, cart.children[x]);
                     break;
@@ -308,8 +307,6 @@ function listControl() {
 
 function cartToListControl(e) {
     if (!this.checked) {
-        console.log(this);
-        console.log(e);
         if (e != null) {
             activeNode = e;
             copyNode = e.cloneNode(true);
@@ -318,9 +315,8 @@ function cartToListControl(e) {
             copyNode = this.cloneNode(true);
         }
         copyNode.addEventListener('change', cartControl);
-        console.log(cart);
         if (cart.children.length > 0) {
-            for (x = 0; x < cart.children.length; x++) {
+            for (let x = 0; x < cart.children.length; x++) {
                 if (parseInt(activeNode.getAttribute("index")) < parseInt(cart.children[x].getAttribute("index"))) {
                     cart.insertBefore(copyNode, cart.children[x]);
                     break;
@@ -344,7 +340,7 @@ function cartControl() {
         copyNode.addEventListener('click', Handler);
         var list = document.querySelector("#list");
         if (list.children.length > 0) {
-            for (x = 0; x < list.children.length; x++) {
+            for (let x = 0; x < list.children.length; x++) {
                 if (parseInt(activeNode.getAttribute("index")) < parseInt(list.children[x].getAttribute("index"))) {
                     list.insertBefore(copyNode, list.children[x]);
                     break;
@@ -363,7 +359,6 @@ function itemEdit(e) {
     } else {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
-    console.log(itemIndex);
     var listIndex = document.querySelector('#titleList').selectedIndex - 1;
     var list = shopping[listIndex].items[itemIndex];
     document.getElementById("editItemName").value = list['product'];
@@ -391,28 +386,27 @@ function updateEditModal() {
     modalCategory = document.getElementById("editItemCategory").value;
     modalQty = parseInt(document.getElementById("editItemQuantity").value);
     modalQtyLst = document.getElementById("editItemUnit").value;
-
-    for (x = 0; x < document.getElementById('list').children.length; x++) {
-        if (document.getElementById('list').children[x].getAttribute('index') == itemIndex) {
-            document.getElementById('list').children[x].children[1].children[0].innerHTML = modalFood;
-            document.getElementById('list').children[x].children[2].children[1].innerHTML = modalQty;
-            document.getElementById('list').children[x].children[2].children[0].innerHTML = modalQtyLst;
-            shopping[listIndex].items[itemIndex].product = modalFood;
-            shopping[listIndex].items[itemIndex].quantity = modalQty;
-            shopping[listIndex].items[itemIndex].category = modalCategory;
-            shopping[listIndex].items[itemIndex].unit = modalQtyLst;
-
-            updateList('update', shopping[listIndex].items, 0);
-            if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
-                listPopulate(listIndex);
+    loop1:
+        for (let x = 0; x < document.getElementById('list').children.length; x++) {
+            if (document.getElementById('list').children[x].getAttribute('index') == itemIndex) {
+                document.getElementById('list').children[x].children[1].children[0].innerHTML = modalFood;
+                document.getElementById('list').children[x].children[2].children[1].innerHTML = modalQty;
+                document.getElementById('list').children[x].children[2].children[0].innerHTML = modalQtyLst;
+                shopping[listIndex].items[itemIndex].product = modalFood;
+                shopping[listIndex].items[itemIndex].quantity = modalQty;
+                shopping[listIndex].items[itemIndex].category = modalCategory;
+                shopping[listIndex].items[itemIndex].unit = modalQtyLst;
+                updateList('update', shopping[listIndex].items[itemIndex], listIndex);
+                if (document.getElementById('list').children[x].children[1].children[1].innerHTML != modalCategory) {
+                    listPopulate(listIndex);
+                }
+                break loop1;
             }
         }
-    }
     ModalClose();
 }
 
 function ModalClose() {
-    console.log(this);
     document.getElementById('modalContent').style.visibility = 'hidden';
     document.getElementById('titles').style.visibility = 'hidden';
     document.getElementById('modal').classList.remove('visible');
@@ -426,9 +420,14 @@ function deleteListItem(e) {
     } else {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
-    shopping[listIndex].items.splice(itemIndex, 1);
+    //console.log(shopping[listIndex].items);
+
+    const productObj = shopping[listIndex].items[itemIndex].product;
+
+    //console.log(shopping[listIndex].items);
     //console.log(listIndex);
-    updateList('deleteItem', itemIndex, listIndex);
+    updateList('deleteItem', productObj, listIndex);
+    shopping[listIndex].items.splice(itemIndex, 1);
     listPopulate(listIndex);
 }
 

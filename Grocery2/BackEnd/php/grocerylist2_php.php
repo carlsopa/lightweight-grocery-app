@@ -24,30 +24,42 @@ if(count($dataTotal[0]) > 1){
 	$userId = $dataTotal[0][$ui];
 	$info = $dataTotal[0][$data];
 	$userGroceryList = [];
-	//print_r($jsonGroceryList[4]);
+	//print_r($dataTotal[$id]);
 	foreach($jsonGroceryList as $key=>$value){
-		print_r($jsonGroceryList[$key][$lid]);
-		//echo "\n";
 		if($jsonGroceryList[$key][$lid] == $id){
-		 	//print_r($value);
 			$masterIndex = $key;
 		}
 	}
-	//echo $masterIndex."\n";
+	echo"\n"."----------------"."\n";
+	print_r($jsonGroceryList[$masterIndex]["items"][$info["listItemId"]]);
+	echo"\n";
 	if($type=='update'){
-		$jsonGroceryList[$masterIndex][$items] = $info;
+		echo "\n"."UPDATEITEM"."\n";
+		$jsonGroceryList[$masterIndex]["items"][$info["listItemId"]] = $info;
+		print_r($jsonGroceryList[$masterIndex]["items"][$info["listItemId"]]);
 	}elseif($type=='newObject'){
+		echo "\n"."NEWITEM"."\n";
+		//print_r($jsonGroceryList[$masterIndex][$items]);
 		array_push($jsonGroceryList[$masterIndex][$items],$info);
 	}elseif($type=='new'){
+		echo "\n"."NEWLIST"."\n";
 		$jsonGroceryList[] = array("userId"=>$userId, "listId"=>$id, "title"=>$info,"items"=>[]);
 	}elseif($type=='delete'){
+		echo "\n"."DELETELIST"."\n";
 		array_splice($jsonGroceryList,$masterIndex,1);
 	}elseif($type=='deleteItem'){
-		echo $masterIndex."\n";
-		print_r($info);
-		echo "\n";
-		array_splice($jsonGroceryList[$masterIndex][$items],$info,1);
+		echo "\n"."DELETEITEM"."\n";
+		print_r($jsonGroceryList[$masterIndex][$items]);
+		echo"\n";
+		echo "------------"."\n";
+		foreach($jsonGroceryList[$masterIndex][$items] as $key=>$value){
+			if($value['product']==$info){
+				array_splice($jsonGroceryList[$masterIndex][$items],$key,1);
+			}
+		}
 	}
+	echo"\n"."-------------------"."\n";
+	//print_r($jsonGroceryList[$masterIndex]);
 	$newJsonString = json_encode($jsonGroceryList);
 	file_put_contents($listFile, $newJsonString);
 
