@@ -1,9 +1,8 @@
 var shopping
 var listIndex
-var dataCategory = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
+    //var category = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
 var dataIndex = ['product', 'quantity', 'category'];
 var measureCategory = ['Each', 'Lb', 'Oz', 'Fl Oz']
-    //var lst
 var catList = []
 var cartList = []
 var copyNode;
@@ -27,10 +26,8 @@ function Handler(e) {
     if (e.target.type == 'checkbox') {
         cartToListControl(e.target.parentNode.parentNode)
     } else if (e.target.id == 'editList') {
-        console.log(e.target.parentNode.parentNode.getAttribute('index'));
         itemEdit(e);
     } else if (e.target.id == 'deleteList') {
-        console.log(e.target.parentNode.parentNode.getAttribute('index'));
         deleteListItem(e);
     }
 }
@@ -61,8 +58,10 @@ function checkUser() {
         userRequest.onload = function() {
             if (userRequest.status === 200) {
                 SecondPageShow();
-                //console.log(userRequest.response);
                 shopping = JSON.parse(userRequest.response);
+                //console.log(userRequest.response);
+                console.log(shopping);
+                category = shopping.pop();
                 userName = shopping.shift();
                 userId = shopping.shift();
 
@@ -74,6 +73,9 @@ function checkUser() {
                 addFood();
                 getList();
                 ModalButtons();
+                document.getElementById('newItemName').addEventListener('focus', (event) => {
+                    event.target.value = '';
+                });
 
             } else if (request.status === 400) {
                 console.log(request.response);
@@ -87,22 +89,15 @@ function checkUser() {
 function updateList(type, data, listIndex) {
     let listId;
     if (arguments.length == 2) {
-        console.log(data);
         sendData = [{ 'type': type, 'id': data }]
     } else {
-        console.log(shopping);
-        console.log(data);
-        console.log(listIndex);
         listId = shopping[listIndex]['listId'];
         sendData = [{ 'type': type, 'id': listId, 'userId': userId, 'data': data }];
     }
     var request = new XMLHttpRequest();
     request.open('POST', '../BackEnd/php/grocerylist2_php.php');
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    console.log(listId);
-    console.log(sendData);
     sendData = JSON.stringify(sendData);
-    //console.log(sendData);
     request.send(sendData);
 
     request.onload = function() {
@@ -131,12 +126,12 @@ function categoryPopulate() {
     const newItemUnitList = document.getElementById('newItemUnit');
     const editItemCategoryList = document.getElementById('editItemCategory');
     const editItemUnitList = document.getElementById('editItemUnit')
+    console.log(category);
 
-
-    for (items in dataCategory) {
+    for (items in category) {
         const option = document.createElement('option');
         option.innerHTML = items;
-        option.innerHTML = dataCategory[items];
+        option.innerHTML = category[items];
         option.setAttribute('index', items);
         newItemCategoryList.append(option);
     }
@@ -146,10 +141,10 @@ function categoryPopulate() {
         option.setAttribute('index', items);
         newItemUnitList.appendChild(option);
     }
-    for (items in dataCategory) {
+    for (items in category) {
         const option = document.createElement('option');
         option.innerHTML = items;
-        option.innerHTML = dataCategory[items];
+        option.innerHTML = category[items];
         option.setAttribute('index', items);
         editItemCategoryList.append(option);
     }
@@ -170,26 +165,22 @@ function addFood() {
         let listItem = shopping[listIndex]['items'].length + 1;
 
 
-        const foodCategory = dataCategory[newItemCategory.selectedIndex];
+        const foodCategory = category[newItemCategory.selectedIndex];
         let foundBoolean = false;
         if (listIndex == undefined) {
             alert("please choose a list to add food");
         } else {
-            console.log(shopping);
-            console.log(listIndex);
             let lst = shopping[listIndex].items;
             for (x = 0; x < lst.length; x++) {
                 if (lst[x].product == newItemName.value) {
                     lst[x].quantity = parseInt(lst[x].quantity) + parseInt(newItemQuantity.value);
                     foundBoolean = true;
-                    console.log(lst[x]);
                     updateList('update', lst, listIndex);
                     break;
                 }
             }
 
             if (!foundBoolean) {
-                console.log(lst);
                 lst.push({ listItem: listItem, product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value })
                 updateList('newObject', { listItem: listItem, product: newItemName.value, quantity: parseInt(newItemQuantity.value), category: foodCategory, unit: newItemUnit.value }, parseInt(listIndex));
             }
@@ -201,23 +192,21 @@ function addFood() {
 function newList() {
     title = window.prompt("enter a new list name: ");
     if (title != null) {
-        console.log(shopping);
         var requestUrl = '../Data/groceryLists.json';
         var request = new XMLHttpRequest();
         request.open('GET', requestUrl);
         request.responseType = 'json';
         request.send();
         request.onload = function() {
-            var len = request.response.length + 1;
+            console.log(request.response);
+            var len = Math.max.apply(null, request.response.map(function(o) { return o.listId })) + 1;
+            console.log(len);
             shopping.push({ 'userId': userId, 'listId': len, 'title': title, 'items': [] });
             index = shopping.length;
-            console.log(shopping);
             listIndex = index - 1;
             updateList('new', title, listIndex);
             TitlePopulate();
-            console.log(document.querySelector('#titleList'));
             document.querySelector('#titleList').options[index].selected = true;
-            console.log("here");
         }
     }
 }
@@ -237,7 +226,6 @@ function getList() {
 }
 
 function deleteList() {
-    console.log(shopping);
     var modal = document.getElementById('modal');
     modal.addEventListener('click', ModalClose);
     modal.classList.add('visible');
@@ -248,13 +236,10 @@ function deleteList() {
 }
 
 function deleteTitle() {
-    //console.log("shopping");
     if (this.checked) {
         title = this.parentNode.nextSibling.firstChild.innerHTML;
         var index = this.parentNode.parentNode.getAttribute('index');
-        console.log(index);
         if (window.confirm("Would you like to delete list: " + title + "?")) {
-            console.log(shopping[index]);
 
             updateList('delete', shopping[index]['listId']);
             shopping.splice(index, 1);
@@ -287,20 +272,13 @@ function listControl() {
     if (this.checked) {
         var parentList = this.parentNode.parentNode.parentNode;
         var activeNode = this.parentNode.parentNode;
+        var xxx = [...parentList.children].indexOf(activeNode);
         copyNode = activeNode.cloneNode(true);
-        copyNode.addEventListener('change', cartControl);
-        if (cart.children.length > 0) {
-            for (let x = 0; x < cart.children.length; x++) {
-                if (parseInt(activeNode.getAttribute("index")) < parseInt(cart.children[x].getAttribute("index"))) {
-                    cart.insertBefore(copyNode, cart.children[x]);
-                    break;
-                } else {
-                    cart.append(copyNode);
-                }
-            }
-        } else {
-            cart.append(copyNode);
-        }
+        console.log(copyNode);
+        console.log(xxx);
+        console.log(parentList.children[xxx]);
+        copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
+        cart.append(copyNode);
     }
     parentList.removeChild(activeNode);
 }
@@ -314,43 +292,26 @@ function cartToListControl(e) {
             activeNode = this;
             copyNode = this.cloneNode(true);
         }
-        copyNode.addEventListener('change', cartControl);
-        if (cart.children.length > 0) {
-            for (let x = 0; x < cart.children.length; x++) {
-                if (parseInt(activeNode.getAttribute("index")) < parseInt(cart.children[x].getAttribute("index"))) {
-                    cart.insertBefore(copyNode, cart.children[x]);
-                    break;
-                } else {
-                    cart.append(copyNode);
-                }
-            }
-        } else {
-            cart.append(copyNode);
-        }
+        var list = document.getElementById("list");
+        var xxx = [...list.children].indexOf(activeNode);
+        copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
+        cart.append(copyNode);
     }
-    document.querySelector("#list").removeChild(activeNode);
+    list.removeChild(activeNode);
 }
 
-function cartControl() {
-    if (!this.checked) {
-        activeNode = this;
-        copyNode = this.cloneNode(true);
+function cartControl(ths, x) {
+    console.log(x);
+    if (!ths.checked) {
+        activeNode = ths;
+        copyNode = ths.cloneNode(true);
         copyNode.classList.remove("found");
         copyNode.addEventListener('change', Handler);
         copyNode.addEventListener('click', Handler);
-        var list = document.querySelector("#list");
-        if (list.children.length > 0) {
-            for (let x = 0; x < list.children.length; x++) {
-                if (parseInt(activeNode.getAttribute("index")) < parseInt(list.children[x].getAttribute("index"))) {
-                    list.insertBefore(copyNode, list.children[x]);
-                    break;
-                } else {
-                    list.append(copyNode);
-                }
-            }
-        }
+        var list = document.getElementById("list");
+        list.children[x].before(copyNode);
     }
-    document.querySelector("#cart").removeChild(activeNode);
+    document.getElementById("cart").removeChild(activeNode);
 }
 
 function itemEdit(e) {
@@ -420,12 +381,7 @@ function deleteListItem(e) {
     } else {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
-    //console.log(shopping[listIndex].items);
-
     const productObj = shopping[listIndex].items[itemIndex].product;
-
-    //console.log(shopping[listIndex].items);
-    //console.log(listIndex);
     updateList('deleteItem', productObj, listIndex);
     shopping[listIndex].items.splice(itemIndex, 1);
     listPopulate(listIndex);
@@ -434,7 +390,6 @@ function deleteListItem(e) {
 function TitleDesign() {
     const list = document.getElementById('titles');
     while (list.firstChild) {
-        console.log(list.firstChild);
         list.removeChild(list.firstChild);
     }
     for (x in shopping) {
