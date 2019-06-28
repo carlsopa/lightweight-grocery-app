@@ -4,10 +4,10 @@
     },
     {
         "id": 96332,
-        "categories": ["produce", "meat", "fish", "deli", "dairy", "refrigerated", "packaged meat", "frozen food", "candy"]
+        "categories": ["Produce", "Meat", "fish", "deli", "dairy", "refrigerated", "packaged meat", "frozen food", "candy"]
     },
     {
         "id": 81944,
-        "categories": ["bread", "alchoholic beverages", "beverages", "produce", "deli", "cheese", "dairy", "meat", "bakery", "canned goods"]
+        "categories": ["Bread", "Alchoholic Beverages", "Beverages", "Produce", "Deli", "Cheese", "Dairy", "Meat", "Bakery", "Canned Goods", "Snacks", "Other"]
     }
 ]

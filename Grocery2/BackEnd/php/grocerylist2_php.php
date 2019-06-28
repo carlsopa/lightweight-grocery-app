@@ -7,6 +7,11 @@ $jsonGroceryList = json_decode($listData,true);
 $userFile = $_SERVER['DOCUMENT_ROOT'].'/Grocery/Grocery2-test/Data/groceryUsers.json';
 $userData = file_get_contents($userFile);
 $jsonUserList = json_decode($userData,true);
+
+$categoryFIle = $_SERVER['DOCUMENT_ROOT'].'/Grocery/Grocery2-test/Data/usersCategories.json';
+$categoryData = file_get_contents($categoryFIle);
+$jsonCategoryList = json_decode($categoryData,true);
+
 $items = "items";
 $lid= 'listId';
 $x = "id";
@@ -15,10 +20,12 @@ $t = "type";
 $ix = 'index';
 $name = 'name';
 $ui = 'userId';
+$categories = 'categories';
 //get the data from the front end and convert it over
 $dataTotal = json_decode(file_get_contents( "php://input" ), true);
 
 if(count($dataTotal[0]) > 1){
+	print_r($dataTotal[0]);
 	$type = $dataTotal[0][$t];
 	$id = $dataTotal[0][$x];
 	$userId = $dataTotal[0][$ui];
@@ -35,8 +42,19 @@ if(count($dataTotal[0]) > 1){
 	echo"\n";
 	if($type=='update'){
 		echo "\n"."UPDATEITEM"."\n";
-		$jsonGroceryList[$masterIndex]["items"][$info["listItemId"]] = $info;
-		print_r($jsonGroceryList[$masterIndex]["items"][$info["listItemId"]]);
+		print_r($info);
+		echo "\n";
+		foreach($jsonGroceryList[$masterIndex]["items"] as $key=>$value){
+			print_r($value);
+			if($value["listItemId"]==$info["listItemId"])
+			{
+				print_r($key);
+				$jsonGroceryList[$masterIndex]["items"][$key] = $info;
+			}
+		}
+
+		echo"\n"."#-#-#-#-#-#-#-#-#"."\n";
+		print_r($jsonGroceryList[$masterIndex]["items"]);
 	}elseif($type=='newObject'){
 		echo "\n"."NEWITEM"."\n";
 		//print_r($jsonGroceryList[$masterIndex][$items]);
@@ -57,19 +75,27 @@ if(count($dataTotal[0]) > 1){
 				array_splice($jsonGroceryList[$masterIndex][$items],$key,1);
 			}
 		}
+	}elseif($type == 'cart'){
+		echo"\n"."Cart"."\n";
+		foreach($jsonGroceryList[$masterIndex]["items"] as $key=>$value){
+			//print_r($value);
+			if($value["listItemId"]==$info["listItemId"])
+			{
+				echo"\n"."found"."\n";
+				print_r($value);
+				$jsonGroceryList[$masterIndex]["items"][$key] = $info;
+			}
+		}
 	}
 	echo"\n"."-------------------"."\n";
 	//print_r($jsonGroceryList[$masterIndex]);
 	$newJsonString = json_encode($jsonGroceryList);
-	file_put_contents($listFile, $newJsonString);
+	//file_put_contents($listFile, $newJsonString);
 
 }elseif(count($dataTotal[0]) == 1){
 	$userList = [];
 	$userId = 'userId';
 	
-	$file = $_SERVER['DOCUMENT_ROOT'].'/Grocery/Grocery2-test/Data/groceryUsers.json';
-	$jdata = file_get_contents($file);
-	$jsonUserList = json_decode($jdata,true);
 	$found = false;
 	foreach($jsonUserList as $a){
 		if(strtolower($dataTotal[0][$name]) == strtolower($a[$name])){
@@ -80,10 +106,17 @@ if(count($dataTotal[0]) > 1){
 					array_push($userList,$gl);
 				}
 			}
+			foreach($jsonCategoryList as $jcl){
+				if($jcl[$x]==$a[$x]){
+					array_push($userList,$jcl[$categories]);
+				}
+			}
 			exit(json_encode($userList));
 			$found = true;
 		}
 	}
+	exit(json_encode($userList));
+	$found = true;
 	if(!$found){
 		$id = random_int(10000,99999);
 		$input = ["name"=>$dataTotal[0][$name],"id"=>$id];

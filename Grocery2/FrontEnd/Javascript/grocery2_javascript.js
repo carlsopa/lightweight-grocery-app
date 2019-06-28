@@ -1,6 +1,6 @@
 var shopping
 var listIndex
-    //var category = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
+    var category = ['Other', 'Beverages', 'Bakery', 'Canned Goods', 'Dairy', 'Baking Goods', 'Frozen Foods', 'Meat', 'Produce', 'Snacks'];
 var dataIndex = ['product', 'quantity', 'category'];
 var measureCategory = ['Each', 'Lb', 'Oz', 'Fl Oz']
 var catList = []
@@ -61,7 +61,7 @@ function checkUser() {
                 shopping = JSON.parse(userRequest.response);
                 //console.log(userRequest.response);
                 console.log(shopping);
-                category = shopping.pop();
+                //category = shopping.pop();
                 userName = shopping.shift();
                 userId = shopping.shift();
 
@@ -251,36 +251,74 @@ function deleteTitle() {
 }
 //being supplied a list it gets the individual objects from the list, and itterates over them building up the list display
 function listPopulate(index) {
+    let list = document.getElementById('list');
+    let cart = document.getElementById('cart');
     if (index < 0) {
         window.alert('please select a list from the drop down to continue.');
     } else {
-        var list = document.getElementById('list');
+        //var list = document.getElementById('list');
         while (list.firstChild) {
             list.removeChild(list.firstChild);
+        }
+        while (cart.firstChild) {
+            cart.removeChild(cart.firstChild);
         }
         var listContent = shopping[index].items;
         if (listContent.length > 1) {
             listContent.sort((a, b) => (a.category > b.category) ? 1 : -1);
         }
         for (x = 0; x < listContent.length; x++) {
-            listDesign(x, listContent[x]['product'], listContent[x]['category'], listContent[x]['quantity'], listContent[x]['unit']);
+            listDesign(x, listContent[x]);
         }
     }
 }
 
 function listControl() {
-    if (this.checked) {
-        var parentList = this.parentNode.parentNode.parentNode;
-        var activeNode = this.parentNode.parentNode;
-        var xxx = [...parentList.children].indexOf(activeNode);
-        copyNode = activeNode.cloneNode(true);
-        console.log(copyNode);
-        console.log(xxx);
-        console.log(parentList.children[xxx]);
-        copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
-        cart.append(copyNode);
+    let list = document.getElementById('list');
+    let cart = document.getElementById('cart');
+    if (this.checked & list.contains(this)) {
+        // var parentList = this.parentNode.parentNode.parentNode;
+        //var activeNode = this.parentNode.parentNode;
+        //var xxx = [...parentList.children].indexOf(activeNode);
+        //copyNode = activeNode.cloneNode(true);
+        //console.log(parentList.children);
+
+        //console.log(xxx);
+        //console.log(parentList.children[xxx]);
+        //copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
+        console.log()
+        cart.append(this.parentNode.parentNode);
     }
-    parentList.removeChild(activeNode);
+    if (!this.checked & cart.contains(this)) {
+        // var parentList = this.parentNode.parentNode.parentNode;
+        //var activeNode = this.parentNode.parentNode;
+        //var xxx = [...parentList.children].indexOf(activeNode);
+        //copyNode = activeNode.cloneNode(true);
+        //console.log(parentList.children);
+
+        //console.log(xxx);
+        //console.log(parentList.children[xxx]);
+        //copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
+        var aTags = document.getElementsByClassName("categoryHeader");
+        var searchText = this.parentNode.parentNode.getAttribute('data-category');
+        var found;
+
+        for (var i = 0; i < aTags.length; i++) {
+            if (aTags[i].textContent == searchText) {
+                found = aTags[i];
+                break;
+            }
+        }
+        console.log(found)
+        found.parentNode.insertBefore(this.parentNode.parentNode, found.nextSibling);
+
+    }
+    // var nodeIndex = activeNode.getAttribute('index')
+    //console.log(activeNode.getAttribute('index'));
+    //  var itemId = shopping[listIndex].items[nodeIndex]['listItemId'];
+    //  activeNode.style.display = 'none';
+    // activeNode.childNodes[0].children[0].checked = false;
+    //updateList('cart', { listItemId: itemId, cart: true }, listIndex);
 }
 
 function cartToListControl(e) {
@@ -294,6 +332,7 @@ function cartToListControl(e) {
         }
         var list = document.getElementById("list");
         var xxx = [...list.children].indexOf(activeNode);
+        console.log(xxx);
         copyNode.addEventListener('change', function() { cartControl(this, xxx) }, false);
         cart.append(copyNode);
     }
@@ -301,16 +340,15 @@ function cartToListControl(e) {
 }
 
 function cartControl(ths, x) {
-    console.log(x);
     if (!ths.checked) {
         activeNode = ths;
-        copyNode = ths.cloneNode(true);
-        copyNode.classList.remove("found");
-        copyNode.addEventListener('change', Handler);
-        copyNode.addEventListener('click', Handler);
         var list = document.getElementById("list");
-        list.children[x].before(copyNode);
+        list.children[x].style.removeProperty('display');
+        var nodeIndex = activeNode.getAttribute('index')
+            //console.log(activeNode.getAttribute('index'));
+        var itemId = shopping[listIndex].items[nodeIndex]['listItemId'];
     }
+    //updateList('cart', { listItemId: itemId, cart: false }, listIndex);
     document.getElementById("cart").removeChild(activeNode);
 }
 
@@ -376,12 +414,12 @@ function ModalClose() {
 }
 
 function deleteListItem(e) {
+    const productObj = shopping[listIndex].items[itemIndex].product;
     if (e != null) {
         itemIndex = e.target.parentNode.parentNode.getAttribute('index');
     } else {
         itemIndex = this.parentNode.parentNode.getAttribute('index');
     }
-    const productObj = shopping[listIndex].items[itemIndex].product;
     updateList('deleteItem', productObj, listIndex);
     shopping[listIndex].items.splice(itemIndex, 1);
     listPopulate(listIndex);
@@ -393,18 +431,17 @@ function TitleDesign() {
         list.removeChild(list.firstChild);
     }
     for (x in shopping) {
-        title = shopping[x].title;
-
         const titleItem = document.createElement('div');
-        titleItem.setAttribute('class', 'titleItem');
-        titleItem.setAttribute('index', x);
         const control = document.createElement('div');
-        control.setAttribute('id', 'control');
         const controlSpan = document.createElement('input');
-        controlSpan.setAttribute('type', 'checkbox');
-        controlSpan.addEventListener('change', deleteTitle);
         const titleObject = document.createElement('div');
         const titleBox = document.createElement('div');
+        title = shopping[x].title;
+        titleItem.setAttribute('class', 'titleItem');
+        titleItem.setAttribute('index', x);
+        control.setAttribute('id', 'control');
+        controlSpan.setAttribute('type', 'checkbox');
+        controlSpan.addEventListener('change', deleteTitle);
         titleBox.innerHTML = title;
         control.append(controlSpan);
         titleObject.append(titleBox);
@@ -413,46 +450,47 @@ function TitleDesign() {
     }
 }
 //the building of the list display
-function listDesign(index, item, category, quantity, unit) {
-    var categoryCreate = false;
+function listDesign(index, item) {
+    let categoryCreate = false;
+    let list = document.getElementById('list');
+    let listItems = document.createElement('div');
+    let control = document.createElement('div');
+    let controlSpan = document.createElement('input');
+    let listItem = document.createElement('div');
+    let itemName = document.createElement('span');
+    let itemQuantity = document.createElement('span');
+    let itemUnit = document.createElement('span');
+    let itemControl = document.createElement('div');
+    let editButton = document.createElement('button');
+    let deleteButton = document.createElement('button');
+    let linebreak = document.createElement('br');
+    let itemCategoryText = document.createElement('div');
+    let itemCategory = document.createElement('div');
     //top level selector
-    var list = document.querySelector('#list');
-    //top level for each individual entry
-    var listItems = document.createElement('div');
+    //top level for each individual entry  
     listItems.setAttribute('class', 'items');
     listItems.setAttribute('index', index);
-    //the top level control element
-
-    var control = document.createElement('div');
+    listItems.setAttribute('data-category', item['category'])
+        //the top level control element    
     control.setAttribute('id', 'control');
-    //delete box
-    var controlSpan = document.createElement('input');
+    //delete box    
     controlSpan.setAttribute('type', 'checkbox');
     controlSpan.addEventListener('change', listControl);
-    //top level for product box
-
-    var listItem = document.createElement('div');
+    //top level for product box    
     listItem.setAttribute('class', 'object');
-    var itemName = document.createElement('span');
     itemName.setAttribute('class', 'product');
-    itemName.innerHTML = item;
+    itemName.innerHTML = item['product'];
     //element for the category
-    var itemQuantity = document.createElement('span');
     itemQuantity.setAttribute('class', 'quantityValue');
-    itemQuantity.innerHTML = quantity;
-    var itemUnit = document.createElement('span');
+    itemQuantity.innerHTML = item['quantity'];
     itemUnit.setAttribute('class', 'left quantityType');
-    itemUnit.innerHTML = unit;
-
-    var itemControl = document.createElement('div');
+    itemUnit.innerHTML = item['unit'];
     itemControl.classList.add('hiddenColumn');
-    var editButton = document.createElement('button');
     editButton.setAttribute('type', 'button');
     editButton.id = 'editList';
     editButton.classList.add('editButton');
     editButton.innerHTML = 'edit';
     editButton.addEventListener('click', itemEdit);
-    var deleteButton = document.createElement('button');
     deleteButton.setAttribute('type', 'button');
     deleteButton.id = 'deleteList';
     deleteButton.classList.add('deleteButton');
@@ -460,17 +498,15 @@ function listDesign(index, item, category, quantity, unit) {
     deleteButton.addEventListener('click', deleteListItem);
     itemControl.append(editButton, deleteButton);
     control.appendChild(controlSpan);
-    var linebreak = document.createElement('br');
+
     listItem.append(itemName, linebreak, itemQuantity, itemUnit);
 
-    var itemCategoryText = document.createElement('div');
-    var itemCategory = document.createElement('div');
+
     itemCategory.setAttribute('class', 'categoryHeader');
-    //var emptyHolder = document.createElement('div');
 
     if (catList.length > 0) {
-        if (category != catList[catList.length - 1]) {
-            itemCategoryText.innerHTML = category;
+        if (item['category'] != catList[catList.length - 1]) {
+            itemCategoryText.innerHTML = item['category'];
             itemCategory.append(control, itemCategoryText);
             list.append(itemCategory);
             categoryCreate = true;
@@ -479,7 +515,7 @@ function listDesign(index, item, category, quantity, unit) {
             list.append(listItems);
         }
     } else if (catList.length === 0) {
-        itemCategoryText.innerHTML = category;
+        itemCategoryText.innerHTML = item['category'];
         itemCategory.append(control, itemCategoryText);
         list.append(itemCategory);
         categoryCreate = true;
@@ -489,5 +525,16 @@ function listDesign(index, item, category, quantity, unit) {
         listItems.append(control, listItem, itemControl);
         list.append(listItems);
     }
-    catList.push(category);
+    catList.push(item['category']);
+    if (item['cart'] == true) {
+        var xxx = [...listItems.parentNode.children].indexOf(listItems);
+        listItems.childNodes[0].children[0].checked = true;
+        // copyNode = listItems.cloneNode(true);
+        //  copyNode.addEventListener('change', function() { cartControl(listItems, xxx) }, false);
+        cart.append(listItems);
+        //listItems.style.display = 'none';
+        //    listItems.childNodes[0].children[0].checked = false;
+    }
+
+
 }
